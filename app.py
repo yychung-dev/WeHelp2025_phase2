@@ -127,7 +127,7 @@ async def getAttById(attractionId:int):
     try:
         with cnxpool.get_connection() as cnx: 
                 with cnx.cursor() as cursor:
-                    cursor.execute("SELECT attraction.*, mrt.mrtname, att_url.url FROM attraction LEFT JOIN mrt ON attraction.mrt_id = mrt.id LEFT JOIN att_url ON attraction.id = att_url.attraction_id WHERE attraction.id = %s",[attractionId,])
+                    cursor.execute("SELECT distinct attraction.*, mrt.mrtname, att_url.url FROM attraction LEFT JOIN mrt ON attraction.mrt_id = mrt.id LEFT JOIN att_url ON attraction.id = att_url.attraction_id WHERE attraction.id = %s",[attractionId,])
                     attractionList=cursor.fetchall()
 
                     urlList=[]
