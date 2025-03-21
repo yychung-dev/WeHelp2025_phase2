@@ -48,15 +48,17 @@ async def getAttractionName(page:int,keyword:Optional[str] = None):
 
 
 
-                for j in range(0,len(attractionList)):  
+                for j in range(0, len(attractionList)):  
                     id = attractionList[j][0]
-                    if len(attrArray) ==0 and len(imageList) ==0:
+
+                    if len(attrArray) == 0 and len(imageList) == 0:
                         currentId = id
                         imageList.append(attractionList[j][10])
-                    elif (currentId!=id):
+                    elif currentId != id:
+                        # 處理上一景點的Data
                         attrData = {
-                            "id":attractionList[j-1][0],
-                            "name":attractionList[j-1][1],
+                            "id": attractionList[j-1][0],
+                            "name": attractionList[j-1][1],
                             "category": attractionList[j-1][2],
                             "description": attractionList[j-1][3],
                             "address": attractionList[j-1][4],
@@ -67,14 +69,20 @@ async def getAttractionName(page:int,keyword:Optional[str] = None):
                             "images": imageList
                         }
                         attrArray.append(attrData)
-                        imageList= []
+                        
+                        # 重置imageList，準備下一景點的圖片
+                        imageList = []
                         currentId = id
+
+                    # 如果圖片不是重複的，才增加
+                    if attractionList[j][10] not in imageList:
                         imageList.append(attractionList[j][10])
-                    elif (j==(len(attractionList)-1)):
-                        imageList.append(attractionList[j][10])
+
+                    # 如果是最後一個景點，處理Data並增加
+                    if j == (len(attractionList) - 1):
                         attrData = {
-                            "id":attractionList[j][0],
-                            "name":attractionList[j][1],
+                            "id": attractionList[j][0],
+                            "name": attractionList[j][1],
                             "category": attractionList[j][2],
                             "description": attractionList[j][3],
                             "address": attractionList[j][4],
@@ -84,9 +92,7 @@ async def getAttractionName(page:int,keyword:Optional[str] = None):
                             "lng": attractionList[j][8],
                             "images": imageList
                         }
-                        attrArray.append(attrData)  
-                    else:
-                        imageList.append(attractionList[j][10])
+                        attrArray.append(attrData)
 
                 result = []
                 for i in range(0, len(attrArray), 12): 
@@ -95,17 +101,17 @@ async def getAttractionName(page:int,keyword:Optional[str] = None):
 
 
 
-                if page > len(result) : 
-                    return {"nextPage":None,
-                            "data":[]
+                if page < (len(result)-1) : 
+                    return {"nextPage":page+1,
+                            "data":result[page]
                             }
-                elif page == len(result):
+                elif page == (len(result)-1):
                     return {"nextPage":None,
-                            "data":result[page-1]
+                            "data":result[page]
                             }                    
                 else:
-                    return {"nextPage":page+1,
-                            "data":result[page-1]
+                    return {"nextPage":None,
+                            "data":[]
                             }
     except Exception:
         return JSONResponse(
