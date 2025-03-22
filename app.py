@@ -37,9 +37,9 @@ async def getAttractionName(page:int,keyword:Optional[str] = None):
             with cnx.cursor() as cursor:
                 if (keyword!=None): 
                     attKeyword="%"+keyword+"%"
-                    cursor.execute("SELECT distinct attraction.id FROM attraction LEFT JOIN mrt ON attraction.mrt_id = mrt.id LEFT JOIN att_url ON attraction.id = att_url.attraction_id WHERE (attraction.name like %s or mrt.mrtname = %s)",[attKeyword,keyword])
+                    cursor.execute("SELECT DISTINCT attraction.id FROM attraction LEFT JOIN mrt ON attraction.mrt_id = mrt.id LEFT JOIN att_url ON attraction.id = att_url.attraction_id WHERE (attraction.name like %s or mrt.mrtname = %s)",[attKeyword,keyword])
                 else:
-                    cursor.execute("SELECT distinct attraction.id FROM attraction LEFT JOIN mrt ON attraction.mrt_id = mrt.id LEFT JOIN att_url ON attraction.id = att_url.attraction_id")
+                    cursor.execute("SELECT DISTINCT attraction.id FROM attraction")
                 
                 attrIdList=cursor.fetchall()
                 attrIdinputList = []
@@ -115,7 +115,7 @@ async def getAttById(attractionId:int):
     try:
         with cnxpool.get_connection() as cnx: 
                 with cnx.cursor() as cursor:
-                    cursor.execute("SELECT distinct attraction.*, mrt.mrtname, att_url.url FROM attraction LEFT JOIN mrt ON attraction.mrt_id = mrt.id LEFT JOIN att_url ON attraction.id = att_url.attraction_id WHERE attraction.id = %s",[attractionId,])
+                    cursor.execute("SELECT DISTINCT attraction.*, mrt.mrtname, att_url.url FROM attraction LEFT JOIN mrt ON attraction.mrt_id = mrt.id LEFT JOIN att_url ON attraction.id = att_url.attraction_id WHERE attraction.id = %s",[attractionId,])
                     attractionList=cursor.fetchall()
 
                     urlList=[]
@@ -159,7 +159,7 @@ async def getMRTName():
     try:
         with cnxpool.get_connection() as cnx: 
             with cnx.cursor() as cursor:
-                cursor.execute("SELECT distinct mrt.mrtname, COUNT(attraction.name) AS attraction_counts FROM attraction JOIN mrt ON mrt.id = attraction.mrt_id GROUP BY mrt.mrtname ORDER BY attraction_counts DESC")
+                cursor.execute("SELECT DISTINCT mrt.mrtname, COUNT(attraction.name) AS attraction_counts FROM attraction JOIN mrt ON mrt.id = attraction.mrt_id GROUP BY mrt.mrtname ORDER BY attraction_counts DESC")
                 mrtList=cursor.fetchall()
 
                 mrtOrderArray=[]
