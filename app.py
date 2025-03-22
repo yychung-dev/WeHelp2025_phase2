@@ -37,77 +37,65 @@ async def getAttractionName(page:int,keyword:Optional[str] = None):
             with cnx.cursor() as cursor:
                 if (keyword!=None): 
                     attKeyword="%"+keyword+"%"
-                    cursor.execute("SELECT attraction.*, mrt.mrtname, att_url.url FROM attraction LEFT JOIN mrt ON attraction.mrt_id = mrt.id LEFT JOIN att_url ON attraction.id = att_url.attraction_id WHERE (attraction.name like %s or mrt.mrtname = %s)",[attKeyword,keyword])
+                    cursor.execute("SELECT distinct attraction.id FROM attraction LEFT JOIN mrt ON attraction.mrt_id = mrt.id LEFT JOIN att_url ON attraction.id = att_url.attraction_id WHERE (attraction.name like %s or mrt.mrtname = %s)",[attKeyword,keyword])
                 else:
-                    cursor.execute("SELECT attraction.*, mrt.mrtname, att_url.url FROM attraction LEFT JOIN mrt ON attraction.mrt_id = mrt.id LEFT JOIN att_url ON attraction.id = att_url.attraction_id")
+                    cursor.execute("SELECT distinct attraction.id FROM attraction LEFT JOIN mrt ON attraction.mrt_id = mrt.id LEFT JOIN att_url ON attraction.id = att_url.attraction_id")
                 
-                attractionList=cursor.fetchall()
-                attrArray = []
-                imageList = []
-                currentId = 0
+                attrIdList=cursor.fetchall()
+                attrIdinputList = []
+                for j in range(0, len(attrIdList)):
+                    attrIdinputList.append(attrIdList[j][0])
 
+                totalPages = (len(attrIdinputList) // 12) + (1 if len(attrIdinputList) % 12 != 0 else 0)
+                print('totalPages=',totalPages)
+                if page <= (totalPages-1):
+                    attractionListStr = ', '.join(['%s'] * len(attrIdList))
+                    offset = page*12
+                    print('offset=',offset)
+                    
+                    cursor.execute(f"SELECT attraction.*, mrt.mrtname FROM attraction "
+                        f"LEFT JOIN mrt ON attraction.mrt_id = mrt.id "
+                        f"WHERE attraction.id IN ({attractionListStr}) "
+                        f"ORDER BY attraction.id LIMIT 12 OFFSET %s", 
+                        attrIdinputList + [offset])
+                    attractionList=cursor.fetchall()
 
-
-                for j in range(0, len(attractionList)):  
-                    id = attractionList[j][0]
-
-                    if len(attrArray) == 0 and len(imageList) == 0:
-                        currentId = id
-                        imageList.append(attractionList[j][10])
-                    elif currentId != id:
-                        # 處理上一景點的Data
+                    resultAttrIdList = []
+                    attrArray = []
+                    for j in range(0, len(attractionList)):
+                        resultAttrIdList.append(attractionList[j][0])  
                         attrData = {
-                            "id": attractionList[j-1][0],
-                            "name": attractionList[j-1][1],
-                            "category": attractionList[j-1][2],
-                            "description": attractionList[j-1][3],
-                            "address": attractionList[j-1][4],
-                            "transport": attractionList[j-1][5],
-                            "mrt": attractionList[j-1][9],
-                            "lat": attractionList[j-1][7],
-                            "lng": attractionList[j-1][8],
-                            "images": imageList
-                        }
-                        attrArray.append(attrData)
-                        
-                        # 重置imageList，準備下一景點的圖片
-                        imageList = []
-                        currentId = id
-
-                    # 如果圖片不是重複的，才增加
-                    if attractionList[j][10] not in imageList:
-                        imageList.append(attractionList[j][10])
-
-                    # 如果是最後一個景點，處理Data並增加
-                    if j == (len(attractionList) - 1):
-                        attrData = {
-                            "id": attractionList[j][0],
-                            "name": attractionList[j][1],
-                            "category": attractionList[j][2],
-                            "description": attractionList[j][3],
-                            "address": attractionList[j][4],
-                            "transport": attractionList[j][5],
-                            "mrt": attractionList[j][9],
-                            "lat": attractionList[j][7],
-                            "lng": attractionList[j][8],
-                            "images": imageList
-                        }
-                        attrArray.append(attrData)
-
-                result = []
-                for i in range(0, len(attrArray), 12): 
-                    subArr = attrArray[i:i+12] 
-                    result.append(subArr) 
-
-
-
-                if page < (len(result)-1) : 
-                    return {"nextPage":page+1,
-                            "data":result[page]
+                                "id": attractionList[j][0],
+                                "name": attractionList[j][1],
+                                "category": attractionList[j][2],
+                                "description": attractionList[j][3],
+                                "address": attractionList[j][4],
+                                "transport": attractionList[j][5],
+                                "mrt": attractionList[j][9],
+                                "lat": attractionList[j][7],
+                                "lng": attractionList[j][8],
+                                "images": []
                             }
-                elif page == (len(result)-1):
+                        attrArray.append(attrData)  
+
+                    resultAttrIdStr = ', '.join(['%s'] * len(resultAttrIdList))
+                    cursor.execute(f"SELECT DISTINCT attraction_id, url FROM att_url "
+                        f"WHERE attraction_id IN ({resultAttrIdStr}) "
+                        f"ORDER BY attraction_id", resultAttrIdList)
+                    attrURLList=cursor.fetchall()         
+                    
+                    for j in range(0, len(attrURLList)):  
+                        attrID = attrURLList[j][0]
+                        index = resultAttrIdList.index(attrID)
+                        attrArray[index]["images"].append(attrURLList[j][1])
+
+                if page < (totalPages-1) : 
+                    return {"nextPage":page+1,
+                            "data":attrArray
+                            }
+                elif page == (totalPages-1):
                     return {"nextPage":None,
-                            "data":result[page]
+                            "data":attrArray
                             }                    
                 else:
                     return {"nextPage":None,
