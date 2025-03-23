@@ -35,30 +35,36 @@ async def getAttractionName(page:int,keyword:Optional[str] = None):
     try:
         with cnxpool.get_connection() as cnx: 
             with cnx.cursor() as cursor:
-                if (keyword!=None): 
-                    attKeyword="%"+keyword+"%"
-                    cursor.execute("SELECT DISTINCT attraction.id FROM attraction LEFT JOIN mrt ON attraction.mrt_id = mrt.id LEFT JOIN att_url ON attraction.id = att_url.attraction_id WHERE (attraction.name like %s or mrt.mrtname = %s)",[attKeyword,keyword])
+                # COUNT總資料的數量(條件：有keyword, 無keyword)
+                if (keyword != None): 
+                    attKeyword = "%" + keyword + "%"
+                    cursor.execute("SELECT COUNT(DISTINCT attraction.id) FROM attraction "
+                                   "LEFT JOIN mrt ON attraction.mrt_id = mrt.id "
+                                   "LEFT JOIN att_url ON attraction.id = att_url.attraction_id "
+                                   "WHERE (attraction.name LIKE %s OR mrt.mrtname = %s)", [attKeyword, keyword])
                 else:
-                    cursor.execute("SELECT DISTINCT attraction.id FROM attraction")
+                    cursor.execute("SELECT COUNT(DISTINCT attraction.id) FROM attraction")
                 
-                attrIdList=cursor.fetchall()
-                attrIdinputList = []
-                for j in range(0, len(attrIdList)):
-                    attrIdinputList.append(attrIdList[j][0])
+                total_count = cursor.fetchone()[0]
+                totalPages = (total_count // 12) + (1 if total_count % 12 != 0 else 0)
+                print('totalPages=', totalPages)
 
-                totalPages = (len(attrIdinputList) // 12) + (1 if len(attrIdinputList) % 12 != 0 else 0)
-                print('totalPages=',totalPages)
-                if page <= (totalPages-1):
-                    attractionListStr = ', '.join(['%s'] * len(attrIdList))
-                    offset = page*12
-                    print('offset=',offset)
-                    
-                    cursor.execute(f"SELECT attraction.*, mrt.mrtname FROM attraction "
-                        f"LEFT JOIN mrt ON attraction.mrt_id = mrt.id "
-                        f"WHERE attraction.id IN ({attractionListStr}) "
-                        f"ORDER BY attraction.id LIMIT 12 OFFSET %s", 
-                        attrIdinputList + [offset])
-                    attractionList=cursor.fetchall()
+                if page <= (totalPages - 1):
+                    offset = page * 12
+                    print('offset=', offset)
+
+                    # SELECT時做pagination(LIMIT and OFFSET)
+                    if keyword:
+                        cursor.execute(f"SELECT attraction.*, mrt.mrtname FROM attraction "
+                                       f"LEFT JOIN mrt ON attraction.mrt_id = mrt.id "
+                                       f"WHERE (attraction.name LIKE %s OR mrt.mrtname = %s) "
+                                       f"ORDER BY attraction.id LIMIT 12 OFFSET %s", [attKeyword, keyword, offset])
+                    else:
+                        cursor.execute(f"SELECT attraction.*, mrt.mrtname FROM attraction "
+                                       f"LEFT JOIN mrt ON attraction.mrt_id = mrt.id "
+                                       f"ORDER BY attraction.id LIMIT 12 OFFSET %s", [offset])
+
+                    attractionList = cursor.fetchall()
 
                     resultAttrIdList = []
                     attrArray = []
@@ -80,26 +86,26 @@ async def getAttractionName(page:int,keyword:Optional[str] = None):
 
                     resultAttrIdStr = ', '.join(['%s'] * len(resultAttrIdList))
                     cursor.execute(f"SELECT DISTINCT attraction_id, url FROM att_url "
-                        f"WHERE attraction_id IN ({resultAttrIdStr}) "
-                        f"ORDER BY attraction_id", resultAttrIdList)
-                    attrURLList=cursor.fetchall()         
+                                   f"WHERE attraction_id IN ({resultAttrIdStr}) "
+                                   f"ORDER BY attraction_id", resultAttrIdList)
+                    attrURLList = cursor.fetchall()         
                     
                     for j in range(0, len(attrURLList)):  
                         attrID = attrURLList[j][0]
                         index = resultAttrIdList.index(attrID)
                         attrArray[index]["images"].append(attrURLList[j][1])
 
-                if page < (totalPages-1) : 
-                    return {"nextPage":page+1,
-                            "data":attrArray
+                if page < (totalPages - 1): 
+                    return {"nextPage": page + 1,
+                            "data": attrArray
                             }
-                elif page == (totalPages-1):
-                    return {"nextPage":None,
-                            "data":attrArray
+                elif page == (totalPages - 1):
+                    return {"nextPage": None,
+                            "data": attrArray
                             }                    
                 else:
-                    return {"nextPage":None,
-                            "data":[]
+                    return {"nextPage": None,
+                            "data": []
                             }
     except Exception:
         return JSONResponse(
