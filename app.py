@@ -2,6 +2,9 @@ from fastapi import *
 from fastapi.responses import FileResponse,JSONResponse
 from typing import Optional
 
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+
 app=FastAPI()
 
 import mysql.connector.pooling
@@ -13,6 +16,8 @@ config={
     "database":"tptrip"
     }
 cnxpool=mysql.connector.pooling.MySQLConnectionPool(pool_name="mypool", pool_size=20, **config)
+
+templates = Jinja2Templates(directory="static")
 
 # Static Pages (Never Modify Code in this Block)
 @app.get("/", include_in_schema=False)
@@ -183,3 +188,7 @@ async def getMRTName():
             status_code=500,
             content={"error": True, "message": "伺服器內部錯誤"}
         )
+
+
+app.mount("/",StaticFiles(directory="static",html=True))
+app.mount("/static", StaticFiles(directory="static"), name="static")

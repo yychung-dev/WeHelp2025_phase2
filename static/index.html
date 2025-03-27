@@ -1,11 +1,1099 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Index</title>
-</head>
-<body>
-  
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>台北一日遊</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="navigation">
+        <div class="navlist">
+          <div class="webtitle">台北一日遊</div>
+          <!-- <div class="menu"> -->
+          <div class="nav-item">
+              <div class="item1">預定行程</div>
+              <div class="item2">登入/註冊</div>
+          </div>
+        </div>
+        </div>
+      </div>
+      <div class="hero-section">
+        <div class="slogan">
+          <div class="text-container">
+            <div class="welcome-title">輕鬆享受台北一日悠閒</div>
+            <div class="welcome-text">探索每個角落，體驗城市的深度旅遊行程</div>
+          </div>
+          <div class="box-container">
+            <div class="search-bar">
+              <input type="text" class="input" id="input" placeholder="輸入景點名稱查詢">             
+              <button type="button" class="btn">
+                <img src="images/icon_search.png" alt="放大鏡">
+              </button>              
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    
+    <div class="wrapper">
+      <main>            
+        <div class="maincontent">
+          <!-- 捷運站列表區 -->
+          <div class="listbar-container">
+            <div class="arrow-left">
+              <img src="images/arrow-left.png" alt="左箭頭">
+            </div>
+            <div class="listbar">
+              <div id="listbar-inside" class="listbar-inside">
+              <!-- JS生成list細項 -->
+              </div>
+            </div>
+            <div class="arrow-right">
+              <img src="images/arrow-right.png" alt="右箭頭">
+            </div>
+          </div>
+          
+          <!-- 景點列表區 -->
+          <div class="attractions">
+            <div id="attractions-group" class="attractions-group" ></div>                          
+          </div>        
+                    
+        </div>        
+      </main>
+
+      <!-- Footer區域 -->
+      <footer>
+        <!-- 偵測用div區域 -->
+        <div id="sentinel"></div>
+        <p class="footer-text">COPYRIGHT © 2021 台北一日遊</p>
+      </footer>
+    </div>
+        
+
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      /* desktop: 1200px < screen width <= 1920px */
+
+      body{
+        padding-top:54px;
+        margin: 0;
+        height: 100%;
+        overflow:auto;
+        overflow-x:hidden;
+      }
+
+      html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow:auto;
+        overflow-x:hidden;
+      }
+
+      .wrapper {
+        display: flex;
+        flex-direction: column;
+        min-height: 100%;       
+      }
+
+      main {
+        flex-grow: 1;
+        padding: 20px;        
+        padding-bottom:30px;
+        min-height: 100%;
+      }
+
+
+      
+      .navigation {
+        display: flex;
+        justify-content: center; 
+        height: 54px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        position:fixed;
+        top:0;
+        left:0; 
+        width:100%;
+        z-index:1000;
+        background-color:#FFFFFF;
+        border-bottom: 1px solid #E0E0E0; 
+      }
+
+      .navlist {
+        display: flex;
+        justify-content: space-between; 
+        width: 1200px;
+        height: 34px;
+      }
+
+
+      .webtitle {
+        width: 150px;
+        height: 34px;
+        font-weight: bold;
+        font-size: 30px;
+        font-family: "Noto Sans TC", sans-serif;
+        line-height: 34px;
+        letter-spacing: 0%;
+        color: #448899;
+      }
+
+
+      .nav-item {
+        display: flex;
+        width: 175px;
+        height: 34px;
+      }
+
+      .item1 {
+        width: 84px;
+        height: 34px;
+        padding: 10px;
+        font-size: 16px;
+        line-height: 13px;
+        font-family: "Noto Sans TC", sans-serif;
+        font-weight: 500px;
+        letter-spacing: 0%;
+        color: #666666;
+      }
+
+      .item2 {
+        width: 91px;
+        height: 34px;
+        padding: 10px;
+        font-size: 16px;
+        line-height: 13px;
+        font-family: "Noto Sans TC", sans-serif;
+        font-weight: 500px;
+        letter-spacing: 0%;
+        color: #666666;
+      }
+
+
+      .hero-section {
+        width:100%;
+        max-width: 1920px;
+        height: 320px;
+        background-image: url("images/welcome.png"); 
+        background-size: cover;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        z-index: 1;
+        
+      }
+
+
+      .slogan {
+        margin:0 auto;
+        width: 1200px;
+        height: auto;
+        padding-left:12px;
+        gap: 10px; 
+        display: flex;
+        flex-direction:column;
+        align-items: flex-start;
+      }
+
+      .text-container {
+        width: 100%;
+        height: 78px;
+        gap: 25px; 
+        position: relative;
+      }
+
+      .welcome-title{
+        width: 1180px;
+        height: 41px;
+        font-weight: bold;
+        font-size: 28px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        color: #f8f8f8;
+        background-color: transparent;
+        vertical-align: middle;
+        text-align: left;
+      }
+
+      .welcome-text {
+        width: 1180px;
+        height: 22px;
+        font-weight: 700px;
+        font-size: 16px;
+        line-height: 13.3px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        color: #f8f8f8;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        text-align: left;
+      }
+
+      .box-container {
+        width: 100%;
+        height: 46px;
+        gap: 4px; 
+        margin-top: 15px;
+        position: relative;
+      }
+
+      .search-bar {
+        height: 46px;
+        max-width: 460px;
+        display: flex;
+        align-items: center;
+        box-shadow: 0px 0px 20px 0px #aabbcc;
+        border-radius: 5px;
+        overflow: hidden;
+      }
+
+      .input {
+        width: 400px;
+        height: 100%;
+        color:#757575;
+        padding-top: 3px;
+        border: none;
+        cursor:text;
+        padding-left:15px;
+        font-size:16px;
+        line-height: 40px;
+      }
+
+      input::placeholder {
+        width: 370px;
+        font-weight: bold;
+        font-size: 16px;
+        line-height: 40px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        color: #757575;
+      }
+
+      .btn {
+        width: 60px;
+        height: 100%;
+        padding: 8px 15px 8px 15px;
+        background-color: #448899;
+        border: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor:pointer;
+      }
+
+
+      .maincontent {
+        width: auto;
+        display: flex;
+        flex-wrap:wrap;
+        justify-content: center;
+      }
+
+      .listbar-container {
+        width: 1200px;
+        height: 70px;
+        margin-top: 40px;
+        padding-bottom: 20px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .listbar {
+        width: 1106px;
+        height: 50px;
+        padding: 13px 10px 13px 10px;
+        background-color: #FFFFFF;
+        display:flex;
+        align-items:center;
+        overflow:hidden;
+        flex-grow:1;
+      }
+
+      .listbar-inside {
+        width: 1086px;
+        height: 24px;
+        display: flex;
+        transition:transform 0.7s ease;
+      }
+
+      .list-item {
+        width: auto;
+        height: 24px;
+        padding: 5px 15px 5px 15px;
+        display:flex;
+        justify-content: center;
+        align-items: center;        
+      }
+
+      .listitem-text {
+        width: auto;
+        height: 14px;
+        color: #666666; 
+        font-weight: 500px;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        line-height: 13.3px;
+        letter-spacing: 0%;
+        text-align: center;
+        vertical-align: middle;
+        display:inline-block;
+        white-space:nowrap;
+        cursor:pointer;
+      }
+
+      .arrow-left {
+        width: 47px;
+        height: 50px;
+        padding-top: 9px;
+        padding-bottom: 9px;
+        padding-left: 15px;
+        cursor:pointer;
+        user-select: none;
+      }
+
+      .arrow-right {
+        width: 47px;
+        height: 50px;
+        padding-top: 9px;
+        padding-bottom: 9px;
+        padding-right: 15px;
+        cursor:pointer;
+        user-select: none;
+      }
+
+      
+
+      footer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align:center;
+        width: auto;
+        height: 104px;
+        margin-top:auto;
+        padding-top: 40px;
+        padding-bottom: 40px;
+        background-color: #757575;
+      }
+
+      .footer-text {
+        width: 234px;
+        height: 24px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        color: #ffffff;
+        font-weight: 700px;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        line-height: 13.3px;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        text-align:center;
+      }
+
+      .attractions {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        max-width: 1200px;
+        margin:0 auto;
+        flex-grow: 1; 
+        overflow:visible;
+      }
+
+      .attractions-group {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        width: 1200px; 
+        padding: 15px;
+        gap: 30px;
+      }
+
+      .attraction {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        background-color: #ffffff;
+        width: 270px;
+        height: 242px;
+        border: 1px;
+        border-radius: 5px;
+        flex-grow:1;
+      }
+
+      .attraction:nth-child {
+        flex: 1 1 calc(25%-20px);
+        background-color: lightgray;
+      }
+
+      .box {
+        width: 270px;
+        height: 197px;
+        display:flex;
+        flex-direction:column;
+        background-size:cover;
+        background-repeat:no-repeat;
+        background-position:center center;
+        border-top: 1px solid #E0E0E0;  
+        border-right: 1px solid #E0E0E0;  
+        border-bottom: none;  
+        border-left: 1px solid #E0E0E0;  
+        border-top-left-radius:5px;
+        border-top-right-radius: 5px;
+        border-bottom-left-radius: 0;  
+        border-bottom-right-radius: 0; 
+      }
+
+      .foot {
+        width: auto; 
+        height: 40px;
+        background-color: rgba(0,0,0,0.6);
+        padding: 10px;
+        gap: 4px;
+        margin-top: auto;
+        display: flex;
+        justify-content: center;
+      }
+
+      .foot-text {
+        width: 250px;
+        height: 20px;
+        color: #ffffff;
+        font-weight: 700px;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        align-items: center;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        white-space: pre;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .mrtcat {
+        width: 270px;
+        height: 45px;
+        padding: 1px;
+        gap: 4px;
+        background-color: #FFFFFF;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-top: none;  
+        border-right: 1px solid #E0E0E0;  
+        border-bottom: 1px solid #E0E0E0;  
+        border-left: 1px solid #E0E0E0; 
+        border-top-left-radius:0;
+        border-top-right-radius: 0;
+        border-bottom-left-radius: 5px;  
+        border-bottom-right-radius: 5px; 
+      }
+
+      .mrtcat-text {
+        width: 250px;
+        height: 25px;
+        justify-content: space-between;
+        color: #757575;
+        display: flex;
+        align-items: center;
+      }
+
+      .text-left {
+        width: 125px;
+        height: 25px;
+        font-weight: 500px;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        text-align: left;
+        align-items:center;
+      }
+
+      .text-right {
+        width: 125px;
+        height: 25px;
+        font-weight: 500px;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        text-align: right;
+        align-items:center;
+      }
+
+      #sentinel {
+      height: 1px; 
+      }
+
+      /* tablet: 600px < screen width <= 1200px */
+      @media (max-width: 1199px) {
+        .navigation {
+          padding:10px 10px 10px 10px;
+        }
+
+        .nav-item {
+          margin-right:10px;
+        }
+
+        .item1 {
+          padding-right:2px;
+        }
+
+        .item2 {
+          padding-right:2px;
+        } 
+
+
+        .hero-section {
+          background-size: cover;
+          background-position: center center;        
+        }
+
+        .slogan {
+          margin:0 auto;
+          width: 340px;
+          padding: 12px;
+          gap: 10px; 
+          display: flex;
+          flex-direction:column;
+          align-items: flex-start;
+        }
+
+        .text-container {
+          gap: 15px; 
+        }
+
+        .welcome-title{
+          width: auto;
+          height: 41px;         
+        }
+
+        .welcome-text {
+          width: 320px;
+          height: 22px;
+        }
+
+        .box-container {
+          margin-top: 10px;
+        }
+
+        .search-bar {
+          width: 320px;
+        }
+
+        .input {
+          width: 260px;
+          height: 46px;
+          padding:15px;
+        }
+
+        input::placeholder {
+          width: 230px;
+        }
+
+        .btn {
+          width: 60px;
+          height: 46px;
+        }
+
+        main{
+          padding:0;
+        } 
+
+        .maincontent {
+          width:100%;
+        }
+        
+        .listbar-container{
+          width:100%;
+        }
+        
+        .listbar{          
+          padding:13px 0px 13px 0px;
+        }
+
+
+        .attractions{
+          width:100%;
+        }
+
+        .attractions-group{
+          padding:0;
+          display:block;
+          width:100%;
+          padding: 15px;
+          gap:30px;
+        }
+
+        .attraction{
+          height:280px;
+          width:100%;       
+          margin-bottom:30px;
+          display:flex;
+          justify-content: center;          
+        }
+
+        .box{
+          height:235px;
+          width:100%;
+          display:flex;
+          justify-content: center; 
+        }
+      
+        .foot{          
+          width:100%;
+          padding-left:10px;
+          justify-content: flex-start;
+        }
+
+
+        .mrtcat{
+          height:45px;
+          width:100%;
+        }
+
+        .mrtcat-text {
+          width:100%;
+          padding-left:10px;
+          padding-right:10px;
+          justify-content: space-between;
+          display: flex;
+          align-items: center;
+        }
+
+        main{
+          padding-bottom:30px;
+        }
+      }
+       
+      
+      
+      /* phone: screen width <= 600px */
+      @media(max-width:600px){
+        .navigation {
+          padding:10px 10px 10px 10px;
+        }
+
+        .nav-item {
+          margin-right:10px;
+        }
+
+        .item1 {
+          padding-right:2px;
+        }
+
+        .item2 {
+          padding-right:2px;
+        } 
+
+
+        .hero-section {
+          background-size: cover;
+          background-position: center center;          
+        }
+
+        .slogan {
+          margin:0 auto;
+          width: 340px;
+          padding: 12px;
+          gap: 10px; 
+          display: flex;
+          flex-direction:column;
+          align-items: flex-start;
+        }
+
+        .text-container {
+          gap: 15px; 
+        }
+
+        .welcome-title{
+          width: auto;
+          height: 41px;
+        }
+
+        .welcome-text {
+          width: 320px;
+          height: 22px;
+        }
+
+        .box-container {
+          margin-top: 10px;
+        }
+
+        .search-bar {
+          width: 320px;
+        }
+
+        .input {
+          width: 260px;
+          height: 46px;
+          padding:15px;
+        }
+
+        input::placeholder {
+          width: 230px;
+        }
+
+        .btn {
+          width: 60px;
+          height: 46px;
+        }
+
+
+        main{
+          padding:0;
+        } 
+
+        .maincontent {
+          width:100%;
+        }
+        
+        .listbar-container{
+          width:98%;
+        }
+        
+        .listbar{          
+          padding:13px 0px 13px 0px;
+        }
+
+
+        .attractions{
+          width:100%;
+        }
+
+        .attractions-group{
+          padding:0;
+          display:flex;
+        }
+
+        .attraction{
+          height:280px;
+          width:auto;       
+          margin:0 auto;
+          display:flex;
+          justify-content: center;          
+        }
+
+        .box{
+          height:235px;
+          width:90%;
+          display:flex;
+          justify-content: center; 
+        }
+      
+        .foot{          
+          width:100%;
+          padding-left:10px;
+          justify-content: flex-start;
+        }
+
+
+        .mrtcat{
+          height:45px;
+          width:90%;
+        }
+
+        .mrtcat-text {
+          width:100%;
+          padding-left:10px;
+          padding-right:10px;
+          justify-content: space-between;
+          display: flex;
+          align-items: center;
+        }
+
+        main{
+          padding-bottom:30px;
+        }
+        
+      }
+              
+    </style>
+    
+    
+    <script>     
+      let nextPage = 0;
+      let isLoading=true;  // isLoading：正在加載資料中
+      document.addEventListener('DOMContentLoaded', function() {        
+        fetchMRT();
+        fetchAttractions(nextPage,null,false);
+      });
+
+      function fetchMRT() {        
+        fetch("/api/mrts", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        })
+        .then((response) => {
+          return response.json();
+        })
+        .then((responseresult) => {
+          // console.log(responseresult);
+          mrtlist=responseresult["data"]
+          
+          const listbarInside = document.getElementById('listbar-inside');
+          for (let i = 0; i < mrtlist.length; i++) {
+            // Create div 
+            const listItem=document.createElement('div');
+            listItem.classList.add('list-item'); //
+            const listitemText = document.createElement('div');
+            listitemText.classList.add('listitem-text');
+            
+            // Set div 內容
+            listitemText.textContent = mrtlist[i];
+            listitemText.addEventListener('click', () => {
+              // console.log(mrtlist[i]);
+              // 填入Keyword
+              let inputField = document.getElementById('input');
+              inputField.value = mrtlist[i];
+              let inputText=inputField.value;
+              // call fetchAttractions函數
+              fetchAttractions(0,inputText,true);
+        });
+            // 把新 div 加入到 container 中
+            listItem.appendChild(listitemText);
+            listbarInside.appendChild(listItem);
+          }
+          // 渲染完 list-item 後，再initialize滾動邏輯
+          initializeScroll();  // initialize滾動邏輯
+        })
+        .catch(function (err) {
+          console.info(err);
+        });
+      }
+
+      function initializeScroll() {
+        // 等待 list-item 渲染完後，再initialize滾動邏輯
+        const prevBtn = document.querySelector('.arrow-left');
+        const nextBtn = document.querySelector('.arrow-right');
+        const listbarInside = document.querySelector('.listbar-inside');
+        const listItems = document.querySelectorAll('.list-item');  
+
+        if (listItems.length === 0) {
+            console.error('No list items found!');
+            return;
+        }
+
+        let currentIndex = 0;  
+
+        const moveItems = 1;  
+
+        const itemWidth = listItems[0].offsetWidth;+ parseInt(window.getComputedStyle(listItems[0]).marginRight)
+        
+        const listbarWidth = document.querySelector('.listbar').offsetWidth;
+
+        const visibleItems = Math.floor(listbarWidth / itemWidth);
+
+        function updateListPosition() {
+            listbarInside.style.transform = `translateX(-${currentIndex * itemWidth}px)`;
+        }
+
+
+        prevBtn.addEventListener('click', () => {
+            currentIndex = Math.max(currentIndex - moveItems, 0);
+            updateListPosition();  
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentIndex < listItems.length - visibleItems) {
+                currentIndex = Math.min(currentIndex + moveItems, listItems.length - visibleItems);
+            }
+            updateListPosition();  
+        });
+      }
+     
+
+      function fetchAttractions(page,keyword,needClearAttractionsGroup) {
+        isLoading=true; 
+        let url = "/api/attractions?page="+page;  
+        if(keyword!=null&&keyword!="")
+        {
+          url = url+"&keyword="+keyword;
+        }   
+        fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        })
+        .then((response) => {
+          return response.json();
+        })
+        .then((responseresult) => {
+          // console.log("下一頁"+responseresult["nextPage"]);
+          if(nextPage!=null){
+          nextPage = responseresult["nextPage"];          
+          console.info('nextPage after call attraction = '+nextPage);
+          }
+
+          
+          
+
+          const attractionsGroup = document.getElementById('attractions-group');
+          // 清除attractionsGroup
+          if(needClearAttractionsGroup){
+            while(attractionsGroup.firstChild) {
+              attractionsGroup.firstChild.remove();
+            }
+          }      
+             
+          for (let i = 0; i < responseresult["data"].length; i++) {
+            // Create div 
+            const attraction=document.createElement('div');
+            attraction.classList.add('attraction');
+            const box=document.createElement('div');
+            box.classList.add('box'); 
+            const foot=document.createElement('div');
+            foot.classList.add('foot'); 
+            const footText=document.createElement('div');
+            footText.classList.add('foot-text'); 
+             
+            const mrtCat=document.createElement('div');
+            mrtCat.classList.add('mrtcat'); 
+            const mrtcatText=document.createElement('div');
+            mrtcatText.classList.add('mrtcat-text'); 
+            const textLeft=document.createElement('div');
+            textLeft.classList.add('text-left'); 
+            const textRight=document.createElement('div');
+            textRight.classList.add('text-right'); 
+            
+            
+            // Set div 內容
+                        
+            box.style.backgroundImage = `url(${responseresult["data"][i]["images"][0]})`;
+
+            
+            // console.log(responseresult["data"][i]["images"][0]);
+            
+            footText.textContent = responseresult["data"][i]["name"];                  
+            textLeft.textContent = responseresult["data"][i]["mrt"];
+            textRight.textContent = responseresult["data"][i]["category"];
+
+
+            // 把新 div 加入到 container 中
+            mrtcatText.appendChild(textLeft);
+            mrtcatText.appendChild(textRight);
+            mrtCat.appendChild(mrtcatText);
+            attraction.appendChild(box);
+            attraction.appendChild(mrtCat);
+
+            foot.appendChild(footText);
+            box.appendChild(foot);
+            
+
+            attractionsGroup.appendChild(attraction);            
+          }
+          
+          if (responseresult["nextPage"]==null){
+              if(window.innerWidth>600){
+                let remainder=responseresult["data"].length%4;
+                  if (remainder>0){
+                    let emptyCount=4-remainder;
+                    for(i=0; i<emptyCount; i++){
+                      const emptyAttraction=document.createElement('div');
+                      emptyAttraction.classList.add('attraction');
+                      emptyAttraction.id = 'emptyAttraction';
+                      attractionsGroup.appendChild(emptyAttraction);
+                    }
+                  }
+              } 
+
+              
+            }
+
+          isLoading=false;
+        })
+        .catch(function (err) {
+          console.info(err);
+        });
+      }
+
+      // 偵測滾動到頁面底部
+      const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          // console.log(entry.isIntersecting);
+          if (entry.isIntersecting) {
+            let input = document.getElementById('input').value; 
+            loadNextPage(input);
+          }
+        });
+      }, {
+        root: null,  
+        rootMargin: '0px',  
+        threshold: 1.0  
+      });
+
+      // 監控sentinel
+      const sentinel = document.querySelector('#sentinel');
+      observer.observe(sentinel);
+
+      function loadNextPage(keyword) {
+        console.log('loadNextPage get nextPage = '+nextPage);
+        if(nextPage!=null&&(!isLoading))
+        {
+          fetchAttractions(nextPage,keyword,false);          
+        }
+      }
+
+
+      
+      const searchBtn = document.querySelector('.btn');
+      searchBtn.addEventListener('click', () => {
+        let inputText=document.getElementById('input').value; 
+        nextPage = 0; 
+        fetchAttractions(0,inputText,true);
+        });
+
+      
+      window.addEventListener('resize', function() {
+        let removedElements=document.querySelectorAll('#emptyAttraction');
+        removedElements.forEach(function(removeElement){
+          removeElement.remove();
+        })
+        let parentDiv = document.querySelector('.attractions-group');  // 父容器
+        let childDivs = parentDiv.children;   // 所有直接child elements
+        let numOfAttraction = childDivs.length;  
+        // console.log(numOfAttraction);
+        if(window.innerWidth>600){
+                let remainder=numOfAttraction%4;
+                  if (remainder>0){
+                    let emptyCount=4-remainder;
+                    for(i=0; i<emptyCount; i++){
+                      const emptyAttraction=document.createElement('div');
+                      emptyAttraction.classList.add('attraction');
+                      emptyAttraction.id = 'emptyAttraction';
+                      parentDiv.appendChild(emptyAttraction);
+                    }
+                  }
+              } 
+        let windowWidth = window.innerWidth;
+      });
+
+
+      
+
+    </script>
+  </body>
 </html>
