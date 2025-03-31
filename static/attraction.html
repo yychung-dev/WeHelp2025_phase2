@@ -1,11 +1,531 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Attraction</title>
-</head>
-<body>
-  
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>台北一日遊</title>
+  </head>
+  <body>
+    <header>
+      <div class="navigation">
+        <div class="navlist">
+          <div class="webtitle">台北一日遊</div>
+          <div class="nav-item">
+            <div class="item1">預定行程</div>
+            <div class="item2">登入/註冊</div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main>
+      <!-- section:左(picture)圖片、右(profile)是名字、類別、mrt、訂閱欄 -->
+      <div class="section">
+        <!-- picture -->
+        <div class="picture">
+          <div class="arrows">
+            <div class="arrow-left">
+              <img src="../images/arrow-left.png" alt="左箭頭" />
+            </div>
+            <div class="arrow-right">
+              <img src="../images/arrow-right.png" alt="右箭頭" />
+            </div>
+          </div>
+          <div class="image-container">
+            <!-- 在這裡動態插入圖片 -->
+          </div>
+          <div class="blackpoint">
+            <!-- 在這裡動態插入圓點 -->
+          </div>
+        </div>
+        <!-- profile -->
+        <div class="profile">
+          <div class="attraction-name"></div>
+          <div class="cat-at-mrt"></div>
+
+          <div class="booking-form">
+            <div class="booking-text1">訂購導覽行程</div>
+            <div class="booking-text2">
+              以此景點為中心的一日行程，邀您探索城市角落故事
+            </div>
+            <div class="field-date">
+              <div class="date-text">選擇日期：</div>
+              <input
+                type="date"
+                class="date-input"
+                id="date-input"
+                name="date"
+              />
+            </div>
+            <div class="field-time">
+              <div class="time-text">選擇時間：</div>
+              <div class="radio-group">
+                <label>
+                  <input type="radio" name="color" id="circle1" />
+                  <span class="circle"></span>
+                </label>
+                <div class="text-am">上半天</div>
+                <label>
+                  <input type="radio" name="color" id="circle2" />
+                  <span class="circle"></span>
+                </label>
+                <div class="text-pm">下半天</div>
+              </div>
+            </div>
+            <div class="field-price">
+              <div class="price-text">導覽費用：</div>
+              <div class="actual-price"></div>
+            </div>
+            <button type="button" class="btn-booking">
+              <div class="btn-text">開始預約行程</div>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- 分隔線 -->
+      <div class="separator">我是分隔線</div>
+
+      <!-- infors: 敘述、地址、交通-->
+      <div class="infors">
+        <div class="description"></div>
+        <div class="address-text">景點地址：</div>
+        <div class="address"></div>
+        <div class="transport-text">交通方式：</div>
+        <div class="transport"></div>
+      </div>
+    </main>
+    <footer>
+      <!-- 偵測用div區域 -->
+      <!-- <div id="sentinel"></div> -->
+      <p class="footer-text">COPYRIGHT © 2021 台北一日遊</p>
+    </footer>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      /* desktop: 1200px < screen width <= 1920px */
+
+      body {
+        padding-top: 54px;
+        margin: 0;
+        height: 100%;
+        overflow: auto;
+        overflow-x: hidden;
+      }
+
+      html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: auto;
+        overflow-x: hidden;
+      }
+
+      main {
+        flex-grow: 1;
+        padding: 20px;
+        padding-bottom: 30px;
+        min-height: 100%;
+        /* display: flex; */
+      }
+
+      /* 最上方導航列 */
+      .navigation {
+        display: flex;
+        justify-content: center;
+        height: 54px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        background-color: #ffffff;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .navlist {
+        display: flex;
+        justify-content: space-between;
+        width: 1200px;
+        height: 34px;
+      }
+
+      .webtitle {
+        width: 150px;
+        height: 34px;
+        font-weight: bold;
+        font-size: 30px;
+        font-family: "Noto Sans TC", sans-serif;
+        line-height: 34px;
+        letter-spacing: 0%;
+        color: #448899;
+        cursor: pointer;
+      }
+
+      .nav-item {
+        display: flex;
+        width: 175px;
+        height: 34px;
+      }
+
+      .item1 {
+        width: 84px;
+        height: 34px;
+        padding: 10px;
+        font-size: 16px;
+        line-height: 13px;
+        font-family: "Noto Sans TC", sans-serif;
+        font-weight: 500px;
+        letter-spacing: 0%;
+        color: #666666;
+      }
+
+      .item2 {
+        width: 91px;
+        height: 34px;
+        padding: 10px;
+        font-size: 16px;
+        line-height: 13px;
+        font-family: "Noto Sans TC", sans-serif;
+        font-weight: 500px;
+        letter-spacing: 0%;
+        color: #666666;
+      }
+
+      /* 圖片、描述、訂閱欄 */
+      .section {
+        display: flex;
+        width: 1200px;
+        /* justify-content: space-between; center應該也可以？因為只有兩個元素而已 */
+      }
+
+      .picture {
+        /* justify-content: space-between; */
+        background-color: lightpink;
+        /* width: 45%; */
+        position: relative;
+        height: 400px;
+        width: 45%;
+        overflow: hidden;
+        /* display: flex;
+        align-items: center; */
+      }
+
+      .image-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        /* display: flex;
+        justify-content: center;
+        align-items: center; */
+      }
+
+      .slider-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* 讓圖片維持比例，並填滿容器 */
+        display: none; /* 初始隱藏 */
+      }
+
+      .blackpoint {
+        position: absolute;
+        bottom: 10px; /* 距離容器底部 10px */
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        justify-content: center;
+        z-index: 10; /* 確保圓點浮在圖片之上 */
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: gray;
+        margin: 0 5px;
+        cursor: pointer;
+      }
+
+      .dot.active {
+        background-color: black;
+      }
+
+      .arrows {
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        transform: translateY(-50%);
+        z-index: 20; /* 確保箭頭浮在圖片和圓點之上 */
+      }
+
+      .arrow-left,
+      .arrow-right {
+        cursor: pointer;
+        user-select: none;
+      }
+
+      /* .blackpoint {
+        background-color: lightgreen;
+        justify-content: flex-end;
+      } */
+      .profile {
+        /* background-color: lightpink; */
+        justify-content: space-between;
+        width: 55%;
+        /* display: flex; */
+      }
+      .booking-form {
+        background-color: #e8e8e8;
+      }
+      .field-date {
+        display: flex;
+      }
+      .field-time {
+        display: flex;
+      }
+      .radio-group {
+        display: flex;
+      }
+
+      input[type="radio"] {
+        display: none;
+      }
+
+      .circle {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        border: none;
+        display: inline-block; /*確保 span.circle 顯示為塊級元素：在某些情況下，span 預設是行內元素，可能會影響其顯示。你可以強制讓它顯示為塊級元素。*/
+        background-color: #ffffff;
+        position: relative; /* 用來定位內圓形 */
+        /* cursor: pointer; */
+        /* transition: background-color 0.3s, border-color 0.3s; */
+      }
+
+      .circle::before {
+        content: ""; /* 偽元素不需要內容 。content 屬性是必須的，因為 CSS 的 ::before 和 ::after 偽元素是用來插入內容的。如果沒有設置 content，那麼這個偽元素就不會被渲染出來。即使沒有實際內容，只要設置 content: "";（空字串），這個偽元素就會存在並顯示出來，否則它什麼都不會顯示*/
+        position: absolute; /* 絕對定位 */
+        top: 2px; /* 顯示在圓框內部，距離上邊框 2px */ /*我嘗試改成bottom和right設成2px，也能居中，因為原型是對稱的。
+        chatGPT表示：「實際操作中的差異：儘管這兩種方式（top / left 與 bottom / right）在你看到的效果上可能看起來相同，但從定位的原理來說，它們的參照點是不同的：top: 2px 和 left: 2px：內圓形會相對於外圓框的左上角偏移 2px。bottom: 2px 和 right: 2px：內圓形會相對於外圓框的右下角偏移 2px。雖然它們在視覺上看起來是相同的，但這些設置的邏輯和參照點是不同的。」*/
+        left: 2px; /* 顯示在圓框內部，距離左邊框 2px */
+        width: 18px; /* 內圓形的寬度 */
+        height: 18px; /* 內圓形的高度 */
+        border-radius: 50%; /* 使內圓形變成圓形 */
+        background-color: transparent; /*初始內圓形背景為透明 */
+        /* transition: background-color 0.3s; 平滑過渡效果 */
+      }
+
+      /* 當 radio 被選中時，改變內圓形的顏色 */
+      input[type="radio"]:checked + .circle::before {
+        background-color: #448899; /* 填滿顏色 */
+        /* border-color: #448899; */
+      }
+      /* #circle1,
+      #circle2 {
+        width: 22px;
+        height: 22px;
+        border: none;
+      } */
+
+      .field-price {
+        display: flex;
+      }
+
+      .btn-booking {
+        cursor: pointer;
+      }
+
+      .separator {
+        background-color: lightgray;
+      }
+      /* 敘述、地址、交通 */
+      .infors {
+        background-color: lightgoldenrodyellow;
+      }
+      /* 頁尾 */
+      footer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        width: auto;
+        height: 104px;
+        margin-top: auto;
+        padding-top: 40px;
+        padding-bottom: 40px;
+        background-color: #757575;
+      }
+
+      .footer-text {
+        width: 234px;
+        height: 24px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        color: #ffffff;
+        font-weight: 700px;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        line-height: 13.3px;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        text-align: center;
+      }
+    </style>
+    <script>
+      // 一載入景點頁面，就fetch attraction/某id這個api，取得該景點編號在此api中的全部所需資料，然後各自把他們存入個別變數，並顯示在html各自的欄位裡
+      document.addEventListener("DOMContentLoaded", function () {
+        fetchAttractionsById();
+        // 預選上半天的按鈕
+        let circle1 = document.querySelector(
+          'input[type="radio"][id="circle1"]'
+        );
+        console.log(circle1);
+        if (circle1) {
+          circle1.checked = true; // 設定為選中狀態
+        }
+        // 預顯示導覽費用為新台幣2000元
+        setPrice(2000);
+      });
+
+      // 在此函數裡的動作：fetch全部的所需資料，各自存入變數，並顯示在html各自的欄位裡
+      function fetchAttractionsById() {
+        let pathName = window.location.pathname;
+        let attractionId = pathName.split("/").pop(); //把網址列句尾的那個編號取下來，放進來
+        let url = `/api/attraction/${attractionId}`;
+        fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        })
+          .then((response) => {
+            return response.json();
+          })
+          .then((responseresult) => {
+            // 取得各個所需資料
+            console.log(responseresult["data"]);
+            let attName = responseresult["data"]["name"];
+            let attCategory = responseresult["data"]["category"];
+            let attMRT = responseresult["data"]["mrt"];
+            let attDescription = responseresult["data"]["description"];
+            let attAddress = responseresult["data"]["address"];
+            let attTransport = responseresult["data"]["transport"];
+
+            document.querySelector(".attraction-name").textContent = attName;
+
+            let catAtMRT = `${attCategory} at ${attMRT}`;
+            if (attMRT != null) {
+              document.querySelector(".cat-at-mrt").textContent = catAtMRT;
+            } else {
+              document.querySelector(".cat-at-mrt").textContent = attCategory;
+            }
+
+            document.querySelector(".description").textContent = attDescription;
+            document.querySelector(".address").textContent = attAddress;
+            document.querySelector(".transport").textContent = attTransport;
+            // 只要透過前面這些.textContent設好，就算我在html的div開始和結束標籤裡亂寫字，都不會被印出來。
+            // 這串也可以用jinja來寫，就是把後端的變數名直接用{{}}裝起來，並放到html裡。本來以為是這樣寫：<div class=".attraction-name">{{name}}</div>，但好像失敗欸，應該怎麼寫呢？
+
+            // 圖片輪播
+            let attImagesArray = responseresult["data"]["images"];
+            console.log(attImagesArray);
+            setupImageSlider(attImagesArray);
+          })
+          .catch((error) => {
+            console.error("發生錯誤:", error); // 捕獲錯誤並顯示
+          });
+      }
+
+      function setupImageSlider(images) {
+        const imageContainer = document.querySelector(".image-container");
+        const blackpoint = document.querySelector(".blackpoint");
+
+        // 建立圖片元素並加入image-container
+        images.forEach((image, index) => {
+          let preImg = new Image();
+          preImg.src = image;
+          preImg.classList.add("slider-image");
+          preImg.style.display = index === 0 ? "block" : "none"; // 預設顯示第一張圖片
+          imageContainer.appendChild(preImg);
+
+          // 建立圓點並加入blackpoint區塊
+          let dot = document.createElement("span");
+          dot.classList.add("dot");
+          if (index === 0) dot.classList.add("active"); // 第一個圓點為選中狀態
+          blackpoint.appendChild(dot);
+        });
+
+        let currentIndex = 0;
+
+        // 左右箭頭切換圖片
+        const prevButton = document.querySelector(".arrow-left");
+        const nextButton = document.querySelector(".arrow-right");
+        const dots = document.querySelectorAll(".dot");
+        const imagesList = document.querySelectorAll(".slider-image");
+
+        prevButton.addEventListener("click", () => {
+          changeImage(-1);
+        });
+
+        nextButton.addEventListener("click", () => {
+          changeImage(1);
+        });
+
+        function changeImage(direction) {
+          // 隱藏當前圖片
+          imagesList[currentIndex].style.display = "none";
+          dots[currentIndex].classList.remove("active");
+
+          // 計算下一張圖片的索引
+          currentIndex =
+            (currentIndex + direction + images.length) % images.length;
+
+          // 顯示新的圖片
+          imagesList[currentIndex].style.display = "block";
+          dots[currentIndex].classList.add("active");
+        }
+      }
+
+      // 點擊台北一日遊字樣，跳轉頁面至首頁：使用addEventListener，click後就去fetch 後端寫的靜態網頁api: index.html。
+      let webTitle = document.querySelector(".webtitle");
+      webTitle.addEventListener("click", () => {
+        // fetch 「/」這個靜態網頁api，並且跳轉頁面(window.location)
+        let url = "/";
+        fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        }).then((response) => {
+          // console.log(response.url);
+          window.location.href = response.url;
+        });
+      });
+
+      // 點擊上半天前面那個按鈕，顯示導覽費用為新台幣2000元。點擊下半天前面那個按鈕，顯示導覽費用為新台幣2500元。
+      let button1 = document.querySelector("#circle1");
+      let button2 = document.querySelector("#circle2");
+      let actualPrice = document.querySelector(".actual-price");
+      // console.log(actualPrice);
+      // console.log(button1);
+      function setPrice(price) {
+        actualPrice.textContent = `新台幣 ${price} 元`;
+      }
+      button1.addEventListener("click", () => {
+        setPrice(2000);
+      });
+      button2.addEventListener("click", () => {
+        setPrice(2500);
+      });
+    </script>
+  </body>
 </html>

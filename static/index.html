@@ -436,6 +436,7 @@
         border: 1px;
         border-radius: 5px;
         flex-grow:1;
+        cursor:pointer;
       }
 
       .attraction:nth-child {
@@ -983,6 +984,28 @@
             // Set div 內容
                         
             box.style.backgroundImage = `url(${responseresult["data"][i]["images"][0]})`;
+            
+            attraction.addEventListener('click',() => {
+              let attractionId=responseresult["data"][i]["id"];
+              console.log(attractionId);
+              // fetch 「/attraction/{id}」這個靜態網頁api，把id作為路徑參數傳入api，並且跳轉頁面(window.location)
+              let url=`/attraction/${attractionId}`;
+              fetch(url, {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+              },
+              })
+              .then((response)=>{
+                // response.URL
+                // window.location.href=`/attraction/${attractionId}`;
+                window.location.href=response.url;
+              })
+            }
+            )
+
+              
 
             
             // console.log(responseresult["data"][i]["images"][0]);
