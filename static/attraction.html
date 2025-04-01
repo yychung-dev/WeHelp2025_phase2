@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>台北一日遊</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <header>
@@ -18,26 +22,29 @@
       </div>
     </header>
     <main>
-      <!-- section:左(picture)圖片、右(profile)是名字、類別、mrt、訂閱欄 -->
       <div class="section">
-        <!-- picture -->
         <div class="picture">
           <div class="arrows">
             <div class="arrow-left">
-              <img src="../images/arrow-left.png" alt="左箭頭" />
+              <img
+                src="../images/btn_leftArrow(attractionpage).png"
+                alt="左箭頭"
+              />
             </div>
             <div class="arrow-right">
-              <img src="../images/arrow-right.png" alt="右箭頭" />
+              <img
+                src="../images/btn_rightArrow(attractionpage).png"
+                alt="右箭頭"
+              />
             </div>
           </div>
           <div class="image-container">
-            <!-- 在這裡動態插入圖片 -->
+            <!-- JS動態插入圖片 -->
           </div>
           <div class="blackpoint">
-            <!-- 在這裡動態插入圓點 -->
+            <!-- JS動態插入circle -->
           </div>
         </div>
-        <!-- profile -->
         <div class="profile">
           <div class="attraction-name"></div>
           <div class="cat-at-mrt"></div>
@@ -81,10 +88,8 @@
           </div>
         </div>
       </div>
-      <!-- 分隔線 -->
-      <div class="separator">我是分隔線</div>
+      <hr class="separator" />
 
-      <!-- infors: 敘述、地址、交通-->
       <div class="infors">
         <div class="description"></div>
         <div class="address-text">景點地址：</div>
@@ -124,14 +129,12 @@
       }
 
       main {
-        flex-grow: 1;
-        padding: 20px;
-        padding-bottom: 30px;
+        padding: 0;
+        padding-bottom: 40px;
         min-height: 100%;
-        /* display: flex; */
+        width: 100%;
       }
 
-      /* 最上方導航列 */
       .navigation {
         display: flex;
         justify-content: center;
@@ -157,7 +160,7 @@
       .webtitle {
         width: 150px;
         height: 34px;
-        font-weight: bold;
+        font-weight: 700;
         font-size: 30px;
         font-family: "Noto Sans TC", sans-serif;
         line-height: 34px;
@@ -179,7 +182,7 @@
         font-size: 16px;
         line-height: 13px;
         font-family: "Noto Sans TC", sans-serif;
-        font-weight: 500px;
+        font-weight: 500;
         letter-spacing: 0%;
         color: #666666;
       }
@@ -191,67 +194,69 @@
         font-size: 16px;
         line-height: 13px;
         font-family: "Noto Sans TC", sans-serif;
-        font-weight: 500px;
+        font-weight: 500;
         letter-spacing: 0%;
         color: #666666;
       }
 
-      /* 圖片、描述、訂閱欄 */
       .section {
         display: flex;
         width: 1200px;
-        /* justify-content: space-between; center應該也可以？因為只有兩個元素而已 */
+        margin: 0 auto;
+        padding-left: 15px;
+        padding-right: 15px;
+        margin-top: 40px;
       }
 
       .picture {
-        /* justify-content: space-between; */
-        background-color: lightpink;
-        /* width: 45%; */
         position: relative;
         height: 400px;
-        width: 45%;
+        width: 540px;
         overflow: hidden;
-        /* display: flex;
-        align-items: center; */
+        border-radius: 5px;
+        margin-right: 30px;
       }
 
       .image-container {
         position: relative;
         width: 100%;
         height: 100%;
-        /* display: flex;
-        justify-content: center;
-        align-items: center; */
       }
 
       .slider-image {
         width: 100%;
         height: 100%;
-        object-fit: cover; /* 讓圖片維持比例，並填滿容器 */
-        display: none; /* 初始隱藏 */
+        object-fit: cover;
+        display: none;
       }
 
       .blackpoint {
         position: absolute;
-        bottom: 10px; /* 距離容器底部 10px */
+        bottom: 10px;
         left: 50%;
         transform: translateX(-50%);
         display: flex;
         justify-content: center;
-        z-index: 10; /* 確保圓點浮在圖片之上 */
+        z-index: 10;
       }
 
       .dot {
-        width: 10px;
-        height: 10px;
+        width: 12px;
+        height: 12px;
         border-radius: 50%;
-        background-color: gray;
-        margin: 0 5px;
-        cursor: pointer;
+        background-color: #ffffff;
+        margin: 0 6px;
+        box-sizing: border-box;
+        border: 1px solid transparent;
+        opacity: 0.75;
+        transition: background-color 0.4s ease, border-color 0.4s ease,
+          opacity 0.4s ease;
       }
 
       .dot.active {
-        background-color: black;
+        background-color: #000000;
+        border: 1px solid #ffffff;
+        opacity: 1;
       }
 
       .arrows {
@@ -261,34 +266,166 @@
         display: flex;
         justify-content: space-between;
         transform: translateY(-50%);
-        z-index: 20; /* 確保箭頭浮在圖片和圓點之上 */
+        z-index: 20;
       }
 
       .arrow-left,
       .arrow-right {
         cursor: pointer;
         user-select: none;
+        opacity: 0.6;
       }
 
-      /* .blackpoint {
-        background-color: lightgreen;
-        justify-content: flex-end;
-      } */
-      .profile {
-        /* background-color: lightpink; */
-        justify-content: space-between;
-        width: 55%;
-        /* display: flex; */
+      .arrow-left:hover {
+        opacity: 0.75;
+        transition: opacity 0.5s ease;
       }
+
+      .arrow-right:hover {
+        opacity: 0.75;
+        transition: opacity 0.5s ease;
+      }
+
+      .arrow-left {
+        padding-left: 10px;
+      }
+
+      .arrow-right {
+        padding-right: 10px;
+      }
+
+      .profile {
+        justify-content: space-between;
+        width: 600px;
+      }
+
+      .attraction-name {
+        height: 33px;
+        color: #666666;
+        font-weight: 700;
+        font-size: 24px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        white-space: nowrap;
+        margin-bottom: 15px;
+      }
+
+      .cat-at-mrt {
+        height: 22px;
+        color: #666666;
+        font-weight: 400;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        white-space: nowrap;
+        margin-bottom: 20px;
+      }
+
       .booking-form {
         background-color: #e8e8e8;
+        width: 600px;
+        height: 302px;
+        border-radius: 5px;
+        padding-top: 15px;
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-bottom: 41px;
       }
+
+      .booking-text1 {
+        height: 22px;
+        color: #666666;
+        font-weight: 700;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        white-space: nowrap;
+        margin-bottom: 15px;
+      }
+
+      .booking-text2 {
+        height: 24px;
+        color: #666666;
+        font-weight: 400;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        white-space: nowrap;
+        margin-bottom: 15px;
+      }
+
       .field-date {
+        width: 560px;
+        height: 35px;
         display: flex;
+        align-items: center;
+        margin-bottom: 15px;
       }
+
+      .date-text {
+        width: 81px;
+        height: 17px;
+        color: #666666;
+        font-weight: 700;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        white-space: nowrap;
+        margin-bottom: 6px;
+      }
+
+      .date-input {
+        width: 193px;
+        height: 35px;
+        border: none;
+      }
+
       .field-time {
         display: flex;
+        margin-bottom: 15px;
       }
+
+      .time-text {
+        width: 81px;
+        height: 22px;
+        color: #666666;
+        font-weight: 700;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        white-space: nowrap;
+        margin-right: 5px;
+      }
+
+      .text-am {
+        height: 14px;
+        color: #666666;
+        font-weight: 400;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        margin-left: 4px;
+        margin-right: 18px;
+      }
+
+      .text-pm {
+        height: 14px;
+        color: #666666;
+        font-weight: 400;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        margin-left: 4px;
+      }
+
       .radio-group {
         display: flex;
       }
@@ -302,53 +439,149 @@
         height: 22px;
         border-radius: 50%;
         border: none;
-        display: inline-block; /*確保 span.circle 顯示為塊級元素：在某些情況下，span 預設是行內元素，可能會影響其顯示。你可以強制讓它顯示為塊級元素。*/
+        display: inline-block;
         background-color: #ffffff;
-        position: relative; /* 用來定位內圓形 */
-        /* cursor: pointer; */
-        /* transition: background-color 0.3s, border-color 0.3s; */
+        position: relative;
       }
 
       .circle::before {
-        content: ""; /* 偽元素不需要內容 。content 屬性是必須的，因為 CSS 的 ::before 和 ::after 偽元素是用來插入內容的。如果沒有設置 content，那麼這個偽元素就不會被渲染出來。即使沒有實際內容，只要設置 content: "";（空字串），這個偽元素就會存在並顯示出來，否則它什麼都不會顯示*/
-        position: absolute; /* 絕對定位 */
-        top: 2px; /* 顯示在圓框內部，距離上邊框 2px */ /*我嘗試改成bottom和right設成2px，也能居中，因為原型是對稱的。
-        chatGPT表示：「實際操作中的差異：儘管這兩種方式（top / left 與 bottom / right）在你看到的效果上可能看起來相同，但從定位的原理來說，它們的參照點是不同的：top: 2px 和 left: 2px：內圓形會相對於外圓框的左上角偏移 2px。bottom: 2px 和 right: 2px：內圓形會相對於外圓框的右下角偏移 2px。雖然它們在視覺上看起來是相同的，但這些設置的邏輯和參照點是不同的。」*/
-        left: 2px; /* 顯示在圓框內部，距離左邊框 2px */
-        width: 18px; /* 內圓形的寬度 */
-        height: 18px; /* 內圓形的高度 */
-        border-radius: 50%; /* 使內圓形變成圓形 */
-        background-color: transparent; /*初始內圓形背景為透明 */
-        /* transition: background-color 0.3s; 平滑過渡效果 */
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background-color: transparent;
       }
 
-      /* 當 radio 被選中時，改變內圓形的顏色 */
       input[type="radio"]:checked + .circle::before {
-        background-color: #448899; /* 填滿顏色 */
-        /* border-color: #448899; */
+        background-color: #448899;
       }
-      /* #circle1,
-      #circle2 {
-        width: 22px;
-        height: 22px;
-        border: none;
-      } */
 
       .field-price {
         display: flex;
+        margin-bottom: 25px;
+      }
+
+      .price-text {
+        width: 81px;
+        height: 22px;
+        color: #666666;
+        font-weight: 700;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+      }
+
+      .actual-price {
+        width: 108px;
+        height: 14px;
+        color: #666666;
+        font-weight: 400;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        white-space: nowrap;
       }
 
       .btn-booking {
         cursor: pointer;
+        width: 154px;
+        height: 36px;
+        border-radius: 5px;
+        padding: 10px 20px 10px 20px;
+        background-color: #448899;
+        border: none;
+        display: flex;
+        text-align: center;
+        cursor: pointer;
+      }
+
+      .btn-text {
+        width: 114px;
+        height: 16px;
+        color: #ffffff;
+        font-weight: 400;
+        font-size: 19px;
+        font-family: "Noto Sans TC", sans-serif;
+        line-height: 16px;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        text-align: center;
+        white-space: nowrap;
       }
 
       .separator {
-        background-color: lightgray;
+        width: 1200px;
+        margin: 0 auto;
+        margin-top: 40px;
+        margin-bottom: 40px;
+        border: 1px solid #e8e8e8;
       }
-      /* 敘述、地址、交通 */
+
       .infors {
-        background-color: lightgoldenrodyellow;
+        padding-top: 10px;
+        padding-bottom: 80px;
+        padding-left: 12px;
+        padding-right: 12px;
+        width: 1200px;
+        margin: 0 auto;
       }
+
+      .description {
+        color: #666666;
+        font-weight: 400;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+      }
+
+      .address-text {
+        height: 32px;
+        padding-top: 4px;
+        color: #666666;
+        font-weight: 700;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+      }
+
+      .address {
+        height: 24px;
+        color: #666666;
+        font-weight: 400;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        margin-bottom: 20px;
+      }
+
+      .transport-text {
+        height: 32px;
+        padding-top: 4px;
+        color: #666666;
+        font-weight: 700;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+      }
+
+      .transport {
+        color: #666666;
+        font-weight: 400;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+      }
+
       /* 頁尾 */
       footer {
         display: flex;
@@ -369,7 +602,7 @@
         padding-top: 5px;
         padding-bottom: 5px;
         color: #ffffff;
-        font-weight: 700px;
+        font-weight: 700;
         font-size: 16px;
         font-family: "Noto Sans TC", sans-serif;
         line-height: 13.3px;
@@ -377,27 +610,132 @@
         vertical-align: middle;
         text-align: center;
       }
+
+      /* tablet: screen width < 1200px */
+      @media (max-width: 1199px) {
+        .navlist {
+          padding-left: 10px;
+          padding-right: 10px;
+        }
+        .section {
+          margin: 0 auto;
+          padding-left: 0;
+          padding-right: 0;
+          margin-top: 40px;
+          width: 98%;
+        }
+
+        .picture {
+          position: relative;
+          height: 400px;
+          width: 46%;
+          overflow: hidden;
+          border-radius: 5px;
+          margin-right: 30px;
+        }
+
+        .profile {
+          width: 54%;
+          margin: 0 auto;
+        }
+
+        .attraction-name {
+          height: auto;
+          white-space: normal;
+        }
+
+        .booking-form {
+          width: auto;
+          height: auto;
+        }
+
+        .booking-text2 {
+          height: auto;
+          width: 100%;
+          white-space: normal;
+        }
+        .separator {
+          width: 94%;
+          margin: 40 auto;
+        }
+        .infors {
+          width: 94%;
+        }
+      }
+
+      /* phone: screen width <= 740px */
+      @media (max-width: 740px) {
+        .navlist {
+          padding-left: 10px;
+          padding-right: 10px;
+        }
+        .section {
+          width: 100%;
+          margin-top: 0;
+          padding-left: 0;
+          padding-right: 0;
+          display: block;
+        }
+        .picture {
+          width: 100vw;
+          height: 350px;
+          border-radius: 0px;
+        }
+        .profile {
+          width: 94%;
+          padding-top: 20px;
+          margin: 0 auto;
+        }
+
+        .attraction-name {
+          height: auto;
+          white-space: normal;
+        }
+        .cat-at-mrt {
+          margin-bottom: 20px;
+        }
+
+        .booking-form {
+          width: auto;
+          height: auto;
+        }
+        .booking-text1 {
+          width: 100%;
+        }
+        .booking-text2 {
+          height: auto;
+          width: 100%;
+          white-space: normal;
+        }
+        .separator {
+          width: 94%;
+          margin: 40 auto;
+        }
+        .infors {
+          width: 94%;
+        }
+        .description {
+          margin-bottom: 0;
+        }
+      }
     </style>
     <script>
-      // 一載入景點頁面，就fetch attraction/某id這個api，取得該景點編號在此api中的全部所需資料，然後各自把他們存入個別變數，並顯示在html各自的欄位裡
       document.addEventListener("DOMContentLoaded", function () {
         fetchAttractionsById();
-        // 預選上半天的按鈕
         let circle1 = document.querySelector(
           'input[type="radio"][id="circle1"]'
         );
-        console.log(circle1);
+        // console.log(circle1);
         if (circle1) {
-          circle1.checked = true; // 設定為選中狀態
+          circle1.checked = true;
         }
-        // 預顯示導覽費用為新台幣2000元
         setPrice(2000);
       });
 
-      // 在此函數裡的動作：fetch全部的所需資料，各自存入變數，並顯示在html各自的欄位裡
+      // fetch 「/api/attraction/${attractionId}」
       function fetchAttractionsById() {
         let pathName = window.location.pathname;
-        let attractionId = pathName.split("/").pop(); //把網址列句尾的那個編號取下來，放進來
+        let attractionId = pathName.split("/").pop();
         let url = `/api/attraction/${attractionId}`;
         fetch(url, {
           method: "GET",
@@ -410,8 +748,6 @@
             return response.json();
           })
           .then((responseresult) => {
-            // 取得各個所需資料
-            console.log(responseresult["data"]);
             let attName = responseresult["data"]["name"];
             let attCategory = responseresult["data"]["category"];
             let attMRT = responseresult["data"]["mrt"];
@@ -431,16 +767,14 @@
             document.querySelector(".description").textContent = attDescription;
             document.querySelector(".address").textContent = attAddress;
             document.querySelector(".transport").textContent = attTransport;
-            // 只要透過前面這些.textContent設好，就算我在html的div開始和結束標籤裡亂寫字，都不會被印出來。
-            // 這串也可以用jinja來寫，就是把後端的變數名直接用{{}}裝起來，並放到html裡。本來以為是這樣寫：<div class=".attraction-name">{{name}}</div>，但好像失敗欸，應該怎麼寫呢？
 
-            // 圖片輪播
+            // image slideshow
             let attImagesArray = responseresult["data"]["images"];
-            console.log(attImagesArray);
+            // console.log(attImagesArray);
             setupImageSlider(attImagesArray);
           })
           .catch((error) => {
-            console.error("發生錯誤:", error); // 捕獲錯誤並顯示
+            console.error("發生錯誤:", error);
           });
       }
 
@@ -448,24 +782,24 @@
         const imageContainer = document.querySelector(".image-container");
         const blackpoint = document.querySelector(".blackpoint");
 
-        // 建立圖片元素並加入image-container
+        // Set the image element and add them into image-container div
         images.forEach((image, index) => {
           let preImg = new Image();
           preImg.src = image;
           preImg.classList.add("slider-image");
-          preImg.style.display = index === 0 ? "block" : "none"; // 預設顯示第一張圖片
+          preImg.style.display = index === 0 ? "block" : "none"; // default the first image is block
           imageContainer.appendChild(preImg);
 
-          // 建立圓點並加入blackpoint區塊
+          // Set the dot and add it into blackpoint div
           let dot = document.createElement("span");
           dot.classList.add("dot");
-          if (index === 0) dot.classList.add("active"); // 第一個圓點為選中狀態
+          if (index === 0) dot.classList.add("active"); // default the first dot is active
           blackpoint.appendChild(dot);
         });
 
         let currentIndex = 0;
 
-        // 左右箭頭切換圖片
+        // click the arrow buttons to change the image
         const prevButton = document.querySelector(".arrow-left");
         const nextButton = document.querySelector(".arrow-right");
         const dots = document.querySelectorAll(".dot");
@@ -480,24 +814,21 @@
         });
 
         function changeImage(direction) {
-          // 隱藏當前圖片
           imagesList[currentIndex].style.display = "none";
           dots[currentIndex].classList.remove("active");
 
-          // 計算下一張圖片的索引
           currentIndex =
             (currentIndex + direction + images.length) % images.length;
 
-          // 顯示新的圖片
           imagesList[currentIndex].style.display = "block";
           dots[currentIndex].classList.add("active");
         }
       }
 
-      // 點擊台北一日遊字樣，跳轉頁面至首頁：使用addEventListener，click後就去fetch 後端寫的靜態網頁api: index.html。
+      // click website title for returning to the homepage
       let webTitle = document.querySelector(".webtitle");
       webTitle.addEventListener("click", () => {
-        // fetch 「/」這個靜態網頁api，並且跳轉頁面(window.location)
+        // fetch 「/」
         let url = "/";
         fetch(url, {
           method: "GET",
@@ -511,12 +842,10 @@
         });
       });
 
-      // 點擊上半天前面那個按鈕，顯示導覽費用為新台幣2000元。點擊下半天前面那個按鈕，顯示導覽費用為新台幣2500元。
       let button1 = document.querySelector("#circle1");
       let button2 = document.querySelector("#circle2");
       let actualPrice = document.querySelector(".actual-price");
-      // console.log(actualPrice);
-      // console.log(button1);
+
       function setPrice(price) {
         actualPrice.textContent = `新台幣 ${price} 元`;
       }

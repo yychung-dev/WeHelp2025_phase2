@@ -4,17 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>台北一日遊</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet"/>
   </head>
   <body>
     <header>
       <div class="navigation">
         <div class="navlist">
           <div class="webtitle">台北一日遊</div>
-          <!-- <div class="menu"> -->
           <div class="nav-item">
               <div class="item1">預定行程</div>
               <div class="item2">登入/註冊</div>
@@ -109,7 +105,7 @@
       main {
         flex-grow: 1;
         padding: 20px;        
-        padding-bottom:30px;
+        padding-bottom:40px;
         min-height: 100%;
       }
 
@@ -141,7 +137,7 @@
       .webtitle {
         width: 150px;
         height: 34px;
-        font-weight: bold;
+        font-weight: 700;
         font-size: 30px;
         font-family: "Noto Sans TC", sans-serif;
         line-height: 34px;
@@ -163,7 +159,7 @@
         font-size: 16px;
         line-height: 13px;
         font-family: "Noto Sans TC", sans-serif;
-        font-weight: 500px;
+        font-weight: 500;
         letter-spacing: 0%;
         color: #666666;
       }
@@ -175,7 +171,7 @@
         font-size: 16px;
         line-height: 13px;
         font-family: "Noto Sans TC", sans-serif;
-        font-weight: 500px;
+        font-weight: 500;
         letter-spacing: 0%;
         color: #666666;
       }
@@ -218,7 +214,7 @@
       .welcome-title{
         width: 1180px;
         height: 41px;
-        font-weight: bold;
+        font-weight: 700;
         font-size: 28px;
         font-family: "Noto Sans TC", sans-serif;
         letter-spacing: 0%;
@@ -231,7 +227,7 @@
       .welcome-text {
         width: 1180px;
         height: 22px;
-        font-weight: 700px;
+        font-weight: 700;
         font-size: 16px;
         line-height: 13.3px;
         font-family: "Noto Sans TC", sans-serif;
@@ -275,7 +271,7 @@
 
       input::placeholder {
         width: 370px;
-        font-weight: bold;
+        font-weight: 700;
         font-size: 16px;
         line-height: 40px;
         font-family: "Noto Sans TC", sans-serif;
@@ -344,7 +340,7 @@
         width: auto;
         height: 14px;
         color: #666666; 
-        font-weight: 500px;
+        font-weight: 500;
         font-size: 16px;
         font-family: "Noto Sans TC", sans-serif;
         line-height: 13.3px;
@@ -397,7 +393,7 @@
         padding-top: 5px;
         padding-bottom: 5px;
         color: #ffffff;
-        font-weight: 700px;
+        font-weight: 700;
         font-size: 16px;
         font-family: "Noto Sans TC", sans-serif;
         line-height: 13.3px;
@@ -459,7 +455,13 @@
         border-top-left-radius:5px;
         border-top-right-radius: 5px;
         border-bottom-left-radius: 0;  
-        border-bottom-right-radius: 0; 
+        border-bottom-right-radius: 0;
+        transition: opacity 0.3s ease, filter 0.3s ease; 
+        opacity: 1; 
+      }
+
+      .box:hover {
+        opacity: 0.8;
       }
 
       .foot {
@@ -477,7 +479,7 @@
         width: 250px;
         height: 20px;
         color: #ffffff;
-        font-weight: 700px;
+        font-weight: 700;
         font-size: 16px;
         font-family: "Noto Sans TC", sans-serif;
         align-items: center;
@@ -519,7 +521,7 @@
       .text-left {
         width: 125px;
         height: 25px;
-        font-weight: 500px;
+        font-weight: 500;
         font-size: 16px;
         font-family: "Noto Sans TC", sans-serif;
         letter-spacing: 0%;
@@ -531,7 +533,7 @@
       .text-right {
         width: 125px;
         height: 25px;
-        font-weight: 500px;
+        font-weight: 500;
         font-size: 16px;
         font-family: "Noto Sans TC", sans-serif;
         letter-spacing: 0%;
@@ -544,24 +546,12 @@
       height: 1px; 
       }
 
-      /* tablet: 600px < screen width <= 1200px */
+      /* tablet: 740px < screen width <= 1200px */
       @media (max-width: 1199px) {
-        .navigation {
-          padding:10px 10px 10px 10px;
+        .navlist {
+          padding-left: 10px;
+          padding-right: 10px;
         }
-
-        .nav-item {
-          margin-right:10px;
-        }
-
-        .item1 {
-          padding-right:2px;
-        }
-
-        .item2 {
-          padding-right:2px;
-        } 
-
 
         .hero-section {
           background-size: cover;
@@ -681,30 +671,18 @@
         }
 
         main{
-          padding-bottom:30px;
+          padding-bottom:40px;
         }
       }
        
       
       
-      /* phone: screen width <= 600px */
-      @media(max-width:600px){
-        .navigation {
-          padding:10px 10px 10px 10px;
+      /* phone: screen width <= 740px */
+      @media(max-width:740px){        
+        .navlist {
+          padding-left: 10px;
+          padding-right: 10px;
         }
-
-        .nav-item {
-          margin-right:10px;
-        }
-
-        .item1 {
-          padding-right:2px;
-        }
-
-        .item2 {
-          padding-right:2px;
-        } 
-
 
         .hero-section {
           background-size: cover;
@@ -985,10 +963,11 @@
                         
             box.style.backgroundImage = `url(${responseresult["data"][i]["images"][0]})`;
             
+            // click attraction blocks for going to the corresponding attraction page
             attraction.addEventListener('click',() => {
               let attractionId=responseresult["data"][i]["id"];
-              console.log(attractionId);
-              // fetch 「/attraction/{id}」這個靜態網頁api，把id作為路徑參數傳入api，並且跳轉頁面(window.location)
+              // console.log(attractionId);
+              // fetch 「/attraction/{id}」
               let url=`/attraction/${attractionId}`;
               fetch(url, {
               method: "GET",
@@ -998,8 +977,6 @@
               },
               })
               .then((response)=>{
-                // response.URL
-                // window.location.href=`/attraction/${attractionId}`;
                 window.location.href=response.url;
               })
             }
