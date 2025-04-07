@@ -21,6 +21,70 @@
         </div>
       </div>
     </header>
+    <!-- 跳出式視窗 -->
+    <div class="signup-modal">
+      <div class="deco-bar"></div>
+      <button class="close-modal">
+        <img src="../images/icon_close_modal.png" alt="關閉視窗叉叉" />
+      </button>
+      <div class="signup-modal-content">
+        <div class="signup-text1">註冊會員帳號</div>
+        <input
+          type="text"
+          class="signup-input"
+          id="newname"
+          placeholder="輸入姓名"
+        />
+        <input
+          type="text"
+          class="signup-input"
+          id="newemail"
+          placeholder="輸入電子郵件"
+        />
+        <input
+          type="password"
+          class="signup-input"
+          id="newpassword"
+          placeholder="輸入密碼"
+        />
+        <button type="button" class="signup-btn">註冊新帳戶</button>
+        <div class="signup-result-msg"></div>
+        <div class="signup-text2">
+          <div class="signup-text2-1">已經有帳戶了？</div>
+          <div class="signup-text2-2" id="to-signin">點此登入</div>
+        </div>
+      </div>
+    </div>
+    <div class="signin-modal">
+      <div class="deco-bar"></div>
+      <button class="close-modal">
+        <img src="../images/icon_close_modal.png" alt="關閉視窗叉叉" />
+      </button>
+      <div class="signin-modal-content">
+        <div class="signin-text1">登入會員帳號</div>
+        <input
+          type="text"
+          class="signin-input"
+          id="input-email"
+          placeholder="輸入電子信箱"
+        />
+        <input
+          type="password"
+          class="signin-input"
+          id="input-password"
+          placeholder="輸入密碼"
+        />
+        <button type="button" class="signin-btn">登入帳戶</button>
+        <div class="signin-result-msg"></div>
+        <div class="signin-text2">
+          <div class="signin-text2-1">還沒有帳戶？</div>
+          <div class="signin-text2-2" id="to-signup">點此註冊</div>
+        </div>
+      </div>
+    </div>
+    <!-- Overlay -->
+    <div class="overlay"></div>
+
     <main>
       <div class="section">
         <div class="picture">
@@ -145,7 +209,7 @@
         top: 0;
         left: 0;
         width: 100%;
-        z-index: 1000;
+        z-index: 100;
         background-color: #ffffff;
         border-bottom: 1px solid #e0e0e0;
       }
@@ -197,6 +261,267 @@
         font-weight: 500;
         letter-spacing: 0%;
         color: #666666;
+        cursor: pointer;
+      }
+
+      /* Overlay */
+
+      .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.3);
+        z-index: 200;
+      }
+
+      /* 跳出式視窗 */
+      /* 註冊視窗 */
+      .signup-modal {
+        display: none;
+        background-color: #ffffff;
+        position: fixed;
+        width: 340px;
+        height: auto;
+        top: 248px;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 5px;
+        overflow: hidden;
+        box-shadow: 0 0 60px 0 #aaaaaa;
+        z-index: 300;
+        border: none;
+      }
+
+      .deco-bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 10px;
+        background: linear-gradient(to right, #66aabb, #337788);
+      }
+
+      .close-modal {
+        position: absolute;
+        top: 28px;
+        right: 17px;
+        border: none;
+        background: none;
+        cursor: pointer;
+      }
+
+      .signup-modal-content {
+        width: 310px;
+        margin: 25px 15px 16px 15px;
+      }
+
+      .signup-text1 {
+        width: 310px;
+        height: 27px;
+        font-weight: 700;
+        font-size: 24px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        color: #666666;
+        display: flex;
+        align-items: center;
+        vertical-align: middle;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .signup-input {
+        width: 100%;
+        height: 46px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        border: 1px solid #cccccc;
+        padding: 20px 15px 16.5px 15px;
+      }
+
+      .signup-input:focus {
+        border: 2px solid #cccccc;
+        outline: none;
+      }
+
+      .signup-input::placeholder {
+        width: 280px;
+        font-weight: 500;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        color: #757575;
+      }
+
+      #newname {
+        margin-top: 18px;
+      }
+
+      .signup-btn {
+        width: 100%;
+        height: 46px;
+        padding: 10px 20px 10px 20px;
+        background-color: #448899;
+        border-radius: 5px;
+        border: none;
+
+        font-weight: 400;
+        font-size: 19px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        color: #ffffff;
+        vertical-align: middle;
+        justify-content: center;
+        cursor: pointer;
+      }
+
+      .signup-text2 {
+        width: 100%;
+        height: 22px;
+        font-weight: 500;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        color: #666666;
+        vertical-align: middle;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 10px;
+      }
+
+      .signup-text2-2 {
+        cursor: pointer;
+      }
+
+      .signup-result-msg {
+        margin-top: 10px;
+        font-weight: 500;
+        font-size: 15px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      /* 登入視窗 */
+      .signin-modal {
+        display: none;
+        background-color: #ffffff;
+        position: fixed;
+        width: 340px;
+        height: auto;
+        top: 220px;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 5px;
+        overflow: hidden;
+        box-shadow: 0 0 60px 0 #aaaaaa;
+        z-index: 300;
+        border: none;
+      }
+
+      .signin-modal-content {
+        width: 310px;
+        margin: 25px 15px 16px 15px;
+      }
+
+      .signin-text1 {
+        width: 310px;
+        height: 27px;
+        font-weight: 700;
+        font-size: 24px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        color: #666666;
+        display: flex;
+        align-items: center;
+        vertical-align: middle;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .signin-input {
+        width: 100%;
+        height: 46px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        border: 1px solid #cccccc;
+        padding: 20px 15px 16.5px 15px;
+      }
+
+      .signin-input:focus {
+        border: 2px solid #cccccc;
+        outline: none;
+      }
+
+      .signin-input::placeholder {
+        width: 280px;
+        font-weight: 500;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        color: #757575;
+      }
+
+      #input-email {
+        margin-top: 18px;
+      }
+
+      .signin-btn {
+        width: 100%;
+        height: 46px;
+        padding: 10px 20px 10px 20px;
+        background-color: #448899;
+        border-radius: 5px;
+        border: none;
+
+        font-weight: 400;
+        font-size: 19px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        color: #ffffff;
+        vertical-align: middle;
+        justify-content: center;
+        cursor: pointer;
+      }
+
+      .signin-text2 {
+        width: 100%;
+        height: 22px;
+        font-weight: 500;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        color: #666666;
+        vertical-align: middle;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 10px;
+      }
+
+      .signin-text2-2 {
+        cursor: pointer;
+      }
+
+      .signin-result-msg {
+        margin-top: 10px;
+        font-weight: 500;
+        font-size: 15px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
 
       .section {
@@ -722,6 +1047,7 @@
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         fetchAttractionsById();
+        fetchCheckSignin();
         let circle1 = document.querySelector(
           'input[type="radio"][id="circle1"]'
         );
@@ -855,6 +1181,241 @@
       button2.addEventListener("click", () => {
         setPrice(2500);
       });
+
+      // Overlay
+      let overlay = document.querySelector(".overlay");
+
+      // 跳出式視窗
+      let signupModal = document.querySelector(".signup-modal");
+      let signinModal = document.querySelector(".signin-modal");
+
+      let signinInputs = document.querySelectorAll(".signin-modal input");
+      let signinErrorMsg = document.querySelector(".signin-result-msg");
+
+      let signupInputs = document.querySelectorAll(".signup-modal input");
+      let signupErrorMsg = document.querySelector(".signup-result-msg");
+
+      let signupBtn = document.querySelector(".signup-btn");
+      let signinBtn = document.querySelector(".signin-btn");
+
+      let closeButtons = document.querySelectorAll(".close-modal");
+      let toSigninLink = document.getElementById("to-signin");
+      let toSignupLink = document.getElementById("to-signup");
+
+      // close the modal, remove overlay, clear the input box, clear the result message
+      const closeModal = function () {
+        signupModal.style.display = "none";
+        signinModal.style.display = "none";
+
+        signinInputs.forEach((input) => {
+          input.value = "";
+        });
+        signupInputs.forEach((input) => {
+          input.value = "";
+        });
+
+        signinErrorMsg.classList.remove("show");
+        signinErrorMsg.textContent = "";
+
+        signupErrorMsg.classList.remove("show");
+        signupErrorMsg.textContent = "";
+
+        overlay.style.display = "none";
+      };
+
+      // click the close button to close the modal
+      closeButtons.forEach((button) => {
+        button.addEventListener("click", closeModal);
+      });
+
+      // click overlay to close the modal
+      overlay.addEventListener("click", closeModal);
+
+      // click esc key to close the modal
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && signupModal.style.display !== "none") {
+          closeModal();
+        }
+      });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && signinModal.style.display !== "none") {
+          closeModal();
+        }
+      });
+
+      // click「點此註冊」
+      toSignupLink.addEventListener("click", () => {
+        signinModal.style.display = "none";
+        signupModal.style.display = "flex";
+      });
+
+      // click「點此登入」
+      toSigninLink.addEventListener("click", () => {
+        signupModal.style.display = "none";
+        signinModal.style.display = "flex";
+      });
+
+      // call this function to show signup modal
+      function showSignupModal() {
+        signupModal.style.display = "flex";
+        signupInputs.forEach((input) => {
+          input.value = "";
+        });
+        signupErrorMsg.classList.remove("show");
+        signupErrorMsg.textContent = "";
+        overlay.style.display = "flex";
+      }
+
+      // call this function to show signin modal
+      function showSigninModal() {
+        signinModal.style.display = "flex";
+        signinInputs.forEach((input) => {
+          input.value = "";
+        });
+
+        signinErrorMsg.classList.remove("show");
+        signinErrorMsg.textContent = "";
+
+        overlay.style.display = "flex";
+      }
+
+      // click「登入/註冊」button   // click「登出系統」button
+      let item2 = document.querySelector(".item2");
+      item2.addEventListener("click", () => {
+        if (item2.textContent === "登入/註冊") {
+          showSigninModal();
+        } else if (item2.textContent === "登出系統") {
+          localStorage.removeItem("jwt_token");
+          location.reload();
+        }
+      });
+
+      // 會員註冊功能: click signup button, fetch 「fetchSignupAPI」
+      signupBtn.addEventListener("click", () => {
+        checkSignupEmpty();
+      });
+
+      async function checkSignupEmpty() {
+        let chkNewname = document.getElementById("newname").value.trimEnd();
+        let chkNewemail = document.getElementById("newemail").value.trimEnd();
+        let chkNewpassword = document
+          .getElementById("newpassword")
+          .value.trimEnd();
+        if (
+          (chkNewname === "") |
+          (chkNewemail === "") |
+          (chkNewpassword === "")
+        ) {
+          alert("請填寫空白欄位");
+        } else {
+          fetchSignupAPI();
+        }
+      }
+      async function fetchSignupAPI() {
+        let newName = document.querySelector("#newname").value;
+        let newEmail = document.querySelector("#newemail").value;
+        let newPassword = document.querySelector("#newpassword").value;
+        let resultMsg = document.querySelector(".signup-result-msg");
+        // console.log(newName, newEmail, newPassword);
+        fetch("/api/user", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            name: newName,
+            email: newEmail,
+            password: newPassword,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.ok) {
+              resultMsg.textContent = "註冊成功，請登入系統";
+              resultMsg.style.color = "green";
+            } else {
+              resultMsg.textContent = "Email 已經註冊帳戶";
+              resultMsg.style.color = "red";
+            }
+          })
+          .catch((error) => {
+            console.error("發生錯誤：", error);
+          });
+      }
+
+      // 會員登入功能: click signin button, fetch 「fetchSigninAPI」
+
+      signinBtn.addEventListener("click", () => {
+        checkSigninEmpty();
+      });
+
+      async function checkSigninEmpty() {
+        let chkInputemail = document
+          .getElementById("input-email")
+          .value.trimEnd();
+        let chkInputpassword = document
+          .getElementById("input-password")
+          .value.trimEnd();
+        if ((chkInputemail === "") | (chkInputpassword === "")) {
+          alert("請填寫空白欄位");
+        } else {
+          fetchSigninAPI();
+        }
+      }
+
+      async function fetchSigninAPI() {
+        let inputEmail = document.querySelector("#input-email").value;
+        let inputPassword = document.querySelector("#input-password").value;
+        let resultMsg = document.querySelector(".signin-result-msg");
+        // console.log(inputEmail, inputPassword);
+        fetch("/api/user/auth", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({ email: inputEmail, password: inputPassword }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.token) {
+              localStorage.setItem("jwt_token", data.token);
+            }
+            // console.log(data);
+            if (data.error) {
+              resultMsg.textContent = "電子郵件或密碼錯誤";
+              resultMsg.style.color = "red";
+            } else {
+              location.reload(); // Sign in and refresh the current page
+            }
+          });
+      }
+
+      // 確認使用者是否有登入 功能: fetch 「fetchCheckSignin」
+      // Right after every page load, front-end code would check user sign-in status for later use.
+      async function fetchCheckSignin() {
+        const token = localStorage.getItem("jwt_token");
+        // console.log(token);
+        fetch("/api/user/auth", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data != null) {
+              item2.textContent = "登出系統";
+            } else {
+              item2.textContent = "登入/註冊";
+            }
+          })
+          .catch((error) => {
+            console.error("發生錯誤：", error);
+          });
+      }
     </script>
   </body>
 </html>

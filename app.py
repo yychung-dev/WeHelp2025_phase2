@@ -5,7 +5,16 @@ from typing import Optional
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+from pydantic import BaseModel
+
+import base64
+import jwt
+import datetime
+
 app=FastAPI()
+
+SECRET_KEY="secret" 
+ALGORITHM = "HS256"
 
 import mysql.connector.pooling
 import mysql.connector
@@ -188,6 +197,123 @@ async def getMRTName():
             status_code=500,
             content={"error": True, "message": "伺服器內部錯誤"}
         )
+
+# 註冊一個新的會員 api
+
+class newacctInfo(BaseModel):
+    name: str
+    email: str
+    password: str
+
+@app.post("/api/user")
+async def signup(newacctInfo:newacctInfo,request:Request):
+    with cnxpool.get_connection() as cnx: 
+            with cnx.cursor() as cursor:
+                cursor.execute("SELECT COUNT(*) FROM member WHERE email=%s" ,[newacctInfo.email,])
+                data_name=cursor.fetchall()[0][0]
+                try:
+                    if data_name>0:  
+                        return JSONResponse(
+                            status_code=400,
+                            content={"error": True, "message": "註冊失敗，重複的 Email 或其他原因"}
+                        )
+
+                    else:  
+                        cursor.execute("INSERT INTO member(name, email, password) VALUES(%s, %s, %s) ",[newacctInfo.name, newacctInfo.email,newacctInfo.password])
+                        cnx.commit()
+                        return JSONResponse(
+                            status_code=200,
+                            content={"ok": True}
+                        )
+                except Exception:
+                    return JSONResponse(
+                        status_code=500,
+                        content={"error": True, "message": "伺服器內部錯誤"}
+                    )
+
+        
+                        
+# 登入會員帳戶 api
+
+def create_jwt_token(user_id,name,email):
+    expiration = datetime.datetime.utcnow() + datetime.timedelta(days=7)  
+    payload = {
+        "sub": "userinfo",  
+        "exp": expiration,  
+        "id":user_id,
+        "name":name,
+        "email":email,        
+    }
+    token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
+    return token
+
+class acctInfo(BaseModel):    
+    email: str
+    password: str
+                         
+@app.put("/api/user/auth")
+async def signin(acctInfo:acctInfo, request:Request): 
+    # print(acctInfo)    
+    with cnxpool.get_connection() as cnx: 
+            with cnx.cursor() as cursor:
+                cursor.execute("SELECT id,name,email,password FROM member WHERE email=%s and password=%s",[acctInfo.email,acctInfo.password])
+                data=cursor.fetchall()                
+                try:
+                    if data!=[]:       
+                        user_id = data[0][0]
+                        name = data[0][1]
+                        email = data[0][2]
+                        token=create_jwt_token(user_id,name,email)
+                                                
+                        response = JSONResponse(
+                            status_code=200,
+                            content={
+                                "token":token
+                            }
+                        )
+                        return response
+                    else:
+                        return JSONResponse(
+                        status_code=400,
+                        content={"error": True, "message": "登入失敗，帳號或密碼錯誤或其他原因"}
+                    )
+
+                except Exception:
+                    return JSONResponse(
+                        status_code=500,
+                        content={"error": True, "message": "伺服器內部錯誤"}
+                    )
+
+
+# 取得當前登入的會員資訊 api：
+
+def get_current_user(request:Request):  
+    token = request.headers.get("Authorization")
+    if token is None:
+        return None  
+
+    token = token.replace("Bearer ", "").strip()
+    try:
+        payload=jwt.decode(token,SECRET_KEY,algorithms=[ALGORITHM])
+        return payload   
+    except:
+        return None 
+
+@app.get("/api/user/auth")
+async def checkSignin(request:Request): 
+    authorization= get_current_user(request)
+       
+    if (authorization is None):
+        return None
+    else:
+        response={
+            "data":{
+                "id":authorization['id'],
+                "name":authorization['name'],
+                "email":authorization['email']
+            }
+        }
+        return response
 
 
 app.mount("/",StaticFiles(directory="static",html=True))
