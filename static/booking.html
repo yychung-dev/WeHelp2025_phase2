@@ -1,11 +1,1099 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Booking</title>
-</head>
-<body>
-  
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>預定行程 - 台北一日遊</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/cleave.js"></script>
+  </head>
+  <body>
+    <header>
+      <div class="navigation">
+        <div class="navlist">
+          <div class="webtitle">台北一日遊</div>
+          <div class="nav-item">
+            <div class="item1">預定行程</div>
+            <div class="item2">登入/註冊</div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div class="section-empty-cart">
+      <div class="empty-headline"></div>
+      <div class="empty-state">目前沒有任何待預定的行程</div>
+      <footer class="empty-page-footer">
+        <p class="empty-footer-text">COPYRIGHT © 2021 台北一日遊</p>
+      </footer>
+    </div>
+    <div class="section-filled-cart">
+      <div class="headline"></div>
+      <div class="section">
+        <div class="picture"></div>
+        <div class="infor">
+          <div class="attname-can">
+            <div class="attname"></div>
+            <div class="can">
+              <img src="../images/deletecan.png" alt="刪除行程垃圾桶" />
+            </div>
+          </div>
+          <div class="date">
+            <div class="date-text">日期：</div>
+            <div class="booking-date"></div>
+          </div>
+          <div class="time">
+            <div class="time-text">時間：</div>
+            <div class="booking-time"></div>
+          </div>
+          <div class="price">
+            <div class="price-text">費用：</div>
+            <div class="booking-price"></div>
+          </div>
+          <div class="location">
+            <div class="location-text">地點：</div>
+            <div class="booking-address"></div>
+          </div>
+        </div>
+      </div>
+      <hr class="separator separator-smaller-margin" />
+      <div class="contact-form">
+        <div class="contact-title">您的聯絡資訊</div>
+        <div class="contact-name">
+          <div class="name-text">聯絡姓名：</div>
+          <input
+            type="text"
+            class="name-input"
+            id="name-input"
+            placeholder=""
+          />
+        </div>
+        <div class="contact-email">
+          <div class="email-text">聯絡信箱：</div>
+          <input
+            type="text"
+            class="email-input"
+            id="email-input"
+            placeholder=""
+          />
+        </div>
+        <div class="contact-mobile">
+          <div class="mobile-text">手機號碼：</div>
+          <input
+            type="text"
+            class="mobile-input"
+            id="mobile-input"
+            placeholder=""
+          />
+        </div>
+        <div class="contact-notice">
+          請保持手機暢通，準時到達。導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。
+        </div>
+      </div>
+      <hr class="separator" />
+      <div class="payment">
+        <div class="payment-title">信用卡付款資訊</div>
+        <div class="card-number">
+          <div class="card-number-text">卡片號碼：</div>
+          <input
+            type="text"
+            class="card-number-input"
+            id="card-number-input"
+            placeholder="**** **** **** ****"
+            maxlength="19"
+          />
+        </div>
+        <div class="card-expdate">
+          <div class="expdate-text">過期時間：</div>
+          <input
+            type="text"
+            class="expdate-input"
+            id="expdate-input"
+            placeholder="MM/YY"
+            maxlength="5"
+            required
+          />
+        </div>
+        <div class="card-security-code">
+          <div class="security-code-text">驗證密碼：</div>
+          <input
+            type="password"
+            class="security-code-input"
+            id="security-code-input"
+            placeholder="CVV"
+            maxlength="3"
+            required
+          />
+        </div>
+      </div>
+      <hr class="separator" />
+      <div class="confirm">
+        <div class="total-price">
+          <div class="total-price-text">總價：</div>
+          <div class="total-price-actual"></div>
+        </div>
+        <div class="btn-wrapper">
+          <button type="submit" class="btn-ordering">
+            <div class="btn-ordering-text">確認訂購並付款</div>
+          </button>
+        </div>
+      </div>
+      <footer class="filled-page-footer">
+        <p class="filled-footer-text">COPYRIGHT © 2021 台北一日遊</p>
+      </footer>
+    </div>
+
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      /* desktop: 1200px < screen width <= 1920px */
+
+      body {
+        padding-top: 54px;
+        margin: 0;
+        height: 100%;
+        overflow: auto;
+        overflow-x: hidden;
+      }
+
+      html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: auto;
+        overflow-x: hidden;
+      }
+
+      /* 有商品的購物車 */
+      .headline {
+        width: 1000px;
+        height: 16px;
+        margin-top: 40px;
+        margin-bottom: 30px;
+        margin-left: auto;
+        margin-right: auto;
+
+        color: #666666;
+        font-weight: 700;
+        font-size: 19px;
+        font-family: "Noto Sans TC", sans-serif;
+        line-height: 16px;
+        letter-spacing: 0%;
+        vertical-align: middle;
+      }
+
+      .section {
+        width: 980px;
+        height: 200px;
+        margin: 0 auto;
+        display: flex;
+        gap: 30px;
+      }
+
+      .picture {
+        position: relative;
+        height: 200px;
+        width: 250px;
+        overflow: hidden;
+      }
+
+      .picture-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .infor {
+        width: 700px;
+      }
+
+      .attname-can {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 24px;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .attname {
+        color: #448899;
+        font-weight: 700;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        line-height: 13.3px;
+        letter-spacing: 0%;
+        vertical-align: middle;
+      }
+
+      .can {
+        cursor: pointer;
+        line-height: 13.3px;
+      }
+
+      .date {
+        height: 24px;
+        display: flex;
+        margin-bottom: 10px;
+      }
+
+      .date-text {
+        color: #666666;
+        font-weight: 700;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        height: 14px;
+      }
+
+      .booking-date {
+        color: #666666;
+        font-weight: 400;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        height: 14px;
+      }
+
+      .time {
+        height: 24px;
+        display: flex;
+        margin-bottom: 10px;
+      }
+
+      .time-text {
+        color: #666666;
+        font-weight: 700;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        height: 14px;
+      }
+
+      .booking-time {
+        color: #666666;
+        font-weight: 400;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        height: 14px;
+      }
+
+      .price {
+        height: 24px;
+        display: flex;
+        margin-bottom: 10px;
+      }
+
+      .price-text {
+        color: #666666;
+        font-weight: 700;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        height: 14px;
+      }
+
+      .booking-price {
+        color: #666666;
+        font-weight: 400;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        height: 14px;
+      }
+
+      .location {
+        height: 24px;
+        display: flex;
+      }
+
+      .location-text {
+        color: #666666;
+        font-weight: 700;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        height: 14px;
+      }
+
+      .booking-address {
+        color: #666666;
+        font-weight: 400;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        height: 14px;
+      }
+
+      .separator {
+        width: 1200px;
+        margin: 0 auto;
+        margin-top: 40px;
+        margin-bottom: 40px;
+        border: 1px solid #e8e8e8;
+      }
+
+      .contact-form {
+        width: 980px;
+        margin: 0 auto;
+      }
+
+      .contact-title {
+        height: 24px;
+        color: #666666;
+        font-weight: 700;
+        font-size: 19px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        margin-bottom: 20px;
+      }
+
+      .contact-name {
+        display: flex;
+        margin-bottom: 15px;
+      }
+
+      .name-text {
+        height: 38px;
+        color: #666666;
+        font-weight: 400;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        text-align: center;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .name-input {
+        width: 200px;
+        border-radius: 5px;
+        border: 1px solid #e8e8e8;
+        padding: 10px;
+      }
+
+      .contact-email {
+        display: flex;
+        margin-bottom: 15px;
+      }
+
+      .email-text {
+        height: 38px;
+        color: #666666;
+        font-weight: 400;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        text-align: center;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .email-input {
+        width: 200px;
+        border-radius: 5px;
+        border: 1px solid #e8e8e8;
+        padding: 10px;
+      }
+
+      .contact-mobile {
+        display: flex;
+        margin-bottom: 20px;
+      }
+
+      .mobile-text {
+        height: 38px;
+        color: #666666;
+        font-weight: 400;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        text-align: center;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .mobile-input {
+        width: 200px;
+        border-radius: 5px;
+        border: 1px solid #e8e8e8;
+        padding: 10px;
+      }
+
+      .contact-notice {
+        color: #666666;
+        font-weight: 700;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+      }
+
+      .payment {
+        width: 980px;
+        margin: 0 auto;
+      }
+
+      .payment-title {
+        height: 24px;
+        color: #666666;
+        font-weight: 700;
+        font-size: 19px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        margin-bottom: 20px;
+      }
+
+      .card-number {
+        display: flex;
+        margin-bottom: 15px;
+      }
+
+      .card-number-text {
+        height: 38px;
+        color: #666666;
+        font-weight: 400;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        text-align: center;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .card-number-input {
+        width: 200px;
+        border-radius: 5px;
+        border: 1px solid #e8e8e8;
+        padding: 10px;
+      }
+
+      .card-expdate {
+        display: flex;
+        margin-bottom: 15px;
+      }
+
+      .expdate-text {
+        height: 38px;
+        color: #666666;
+        font-weight: 400;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        text-align: center;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .expdate-input {
+        width: 200px;
+        border-radius: 5px;
+        border: 1px solid #e8e8e8;
+        padding: 10px;
+      }
+
+      .card-security-code {
+        display: flex;
+      }
+
+      .security-code-text {
+        height: 38px;
+        color: #666666;
+        font-weight: 400;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        text-align: center;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .security-code-input {
+        width: 200px;
+        border-radius: 5px;
+        border: 1px solid #e8e8e8;
+        padding: 10px;
+      }
+
+      .confirm {
+        width: 980px;
+        margin: 0 auto;
+        margin-bottom: 40px;
+        padding-bottom: 22px;
+      }
+
+      .total-price {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        height: 20px;
+        margin-bottom: 22px;
+        text-align: center;
+
+        color: #666666;
+        font-weight: 700;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+      }
+
+      .btn-wrapper {
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .btn-ordering {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+        width: 173px;
+        height: 36px;
+        border-radius: 5px;
+        padding: 10px 20px 10px 20px;
+        background-color: #448899;
+        border: none;
+      }
+
+      .btn-ordering-text {
+        width: 133px;
+        height: 16px;
+        color: #ffffff;
+        font-weight: 400;
+        font-size: 19px;
+        font-family: "Noto Sans TC", sans-serif;
+        line-height: 16px;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        text-align: center;
+        white-space: nowrap;
+      }
+
+      /* 有商品購物車_頁尾 */
+      .filled-page-footer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        width: 100vw;
+        height: 104px;
+        margin-top: auto;
+        padding-top: 40px;
+        padding-bottom: 40px;
+        background-color: #757575;
+      }
+
+      .filled-footer-text {
+        width: 234px;
+        height: 24px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        line-height: 13.3px;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        text-align: center;
+      }
+
+      /* 無商品的購物車 */
+      .empty-headline {
+        width: 52.5%;
+        height: 24px;
+        margin-top: 40px;
+        margin-bottom: 30px;
+        margin-left: auto;
+        margin-right: auto;
+
+        color: #666666;
+        font-weight: 700;
+        font-size: 19px;
+        font-family: "Noto Sans TC", sans-serif;
+        line-height: 16px;
+        letter-spacing: 0%;
+        vertical-align: middle;
+      }
+
+      .empty-state {
+        width: 52%;
+        height: 24px;
+        margin-bottom: 40px;
+        margin-left: auto;
+        margin-right: auto;
+
+        color: #666666;
+        font-weight: 400;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        letter-spacing: 0%;
+        vertical-align: middle;
+      }
+
+      /* 無商品購物車_頁尾 */
+      .empty-page-footer {
+        display: flex;
+        justify-content: center;
+        width: auto;
+        height: 865px;
+        padding-top: 40px;
+        background-color: #757575;
+      }
+
+      .empty-footer-text {
+        width: 234px;
+        height: 24px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 16px;
+        font-family: "Noto Sans TC", sans-serif;
+        line-height: 13.3px;
+        letter-spacing: 0%;
+        vertical-align: middle;
+        text-align: center;
+      }
+
+      /* 導航列 */
+      .navigation {
+        display: flex;
+        justify-content: center;
+        height: 54px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 100;
+        background-color: #ffffff;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .navlist {
+        display: flex;
+        justify-content: space-between;
+        width: 1200px;
+        height: 34px;
+      }
+
+      .webtitle {
+        width: 150px;
+        height: 34px;
+        font-weight: 700;
+        font-size: 30px;
+        font-family: "Noto Sans TC", sans-serif;
+        line-height: 34px;
+        letter-spacing: 0%;
+        color: #448899;
+        cursor: pointer;
+      }
+
+      .nav-item {
+        display: flex;
+        width: 175px;
+        height: 34px;
+      }
+
+      .item1 {
+        width: 84px;
+        height: 34px;
+        padding: 10px;
+        font-size: 16px;
+        line-height: 13px;
+        font-family: "Noto Sans TC", sans-serif;
+        font-weight: 500;
+        letter-spacing: 0%;
+        color: #666666;
+        cursor: pointer;
+      }
+
+      .item2 {
+        width: 91px;
+        height: 34px;
+        padding: 10px;
+        font-size: 16px;
+        line-height: 13px;
+        font-family: "Noto Sans TC", sans-serif;
+        font-weight: 500;
+        letter-spacing: 0%;
+        color: #666666;
+        cursor: pointer;
+      }
+
+      /* tablet: screen width < 1200px */
+      @media (max-width: 1199px) {
+        .navlist {
+          padding-left: 10px;
+          padding-right: 10px;
+        }
+
+        .headline {
+          width: 98%;
+          margin: 0 auto;
+          margin-top: 40px;
+          margin-bottom: 30px;
+        }
+
+        .separator {
+          width: 98%;
+          margin: 0 auto;
+          margin-top: 40px;
+        }
+
+        .section {
+          width: 98%;
+          margin: 0 auto;
+          margin-top: 40px;
+        }
+
+        .picture {
+          width: 250px;
+          flex-shrink: 0;
+        }
+
+        .infor {
+          width: 74%;
+          flex: 1;
+          min-width: 0;
+        }
+
+        .contact-form {
+          width: 98%;
+          margin: 0 auto;
+          margin-top: 40px;
+        }
+        .payment {
+          width: 98%;
+          margin: 0 auto;
+          margin-top: 40px;
+        }
+        .confirm {
+          width: 98%;
+          margin: 0 auto;
+          margin-top: 40px;
+          margin-bottom: 40px;
+          padding-bottom: 22px;
+        }
+      }
+
+      /* phone: screen width <= 740px */
+      @media (max-width: 740px) {
+        .navlist {
+          padding-left: 10px;
+          padding-right: 10px;
+        }
+
+        .section-filled-cart {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .headline {
+          width: 95%;
+          margin: 0 auto;
+          margin-top: 40px;
+          margin-bottom: 30px;
+        }
+
+        .section {
+          display: flex;
+          flex-direction: column;
+          height: 430px;
+          width: 100%;
+          gap: 0;
+        }
+
+        .picture {
+          height: 200px;
+          margin: 0 auto;
+          width: 95%;
+          overflow: hidden;
+        }
+
+        .infor {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          margin: 0 auto;
+          width: 95%;
+          padding-top: 30px;
+        }
+
+        .can {
+          position: absolute;
+          bottom: 0;
+          right: 0;
+        }
+
+        .separator {
+          width: 95%;
+          margin: 0 auto;
+          margin-top: 40px;
+        }
+
+        .separator-smaller-margin {
+          margin-top: 30px;
+        }
+
+        .contact-form {
+          width: 95%;
+          margin: 0 auto;
+          margin-top: 40px;
+        }
+        .payment {
+          width: 95%;
+          margin: 0 auto;
+          margin-top: 40px;
+        }
+        .confirm {
+          width: 95%;
+          margin: 0 auto;
+          margin-top: 40px;
+          margin-bottom: 40px;
+          padding-bottom: 22px;
+        }
+
+        .empty-headline {
+          width: 95%;
+        }
+
+        .empty-state {
+          width: 95%;
+        }
+      }
+    </style>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        CheckSigninThenCart();
+      });
+
+      async function CheckSigninThenCart() {
+        const token = localStorage.getItem("jwt_token");
+        let item2 = document.querySelector(".item2");
+        // console.log(token);
+        fetch("/api/user/auth", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((response_result) => response_result.json())
+          .then((data_result) => {
+            // console.log(data_result);
+            if (data_result === null) {
+              let url = "/";
+              fetch(url, {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                  Accept: "application/json",
+                },
+              }).then((response_url) => {
+                // console.log(response.url);
+                window.location.href = response_url.url;
+              });
+            } else {
+              item2.textContent = "登出系統";
+              let userData = data_result;
+              // fetch get booking api
+              fetch("api/booking", {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+              })
+                .then((response) => response.json())
+                .then((data) => {
+                  if (data === null) {
+                    showEmptyCart(userData);
+                  } else {
+                    let attData = data["data"];
+                    // console.log(attData);
+                    showFilledCart(attData, userData);
+                  }
+                });
+            }
+          });
+      }
+
+      // click trash can icon  // fetch delete booking api
+      let deleteCan = document.querySelector(".can");
+      deleteCan.addEventListener("click", () => {
+        const token = localStorage.getItem("jwt_token");
+        fetch("/api/booking", {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.ok) {
+              location.reload();
+            }
+          });
+      });
+
+      // Cleave.js for credit-card auto-formatting
+      new Cleave("#card-number-input", {
+        numericOnly: true,
+        blocks: [4, 4, 4, 4],
+        delimiter: " ",
+      });
+
+      new Cleave("#expdate-input", {
+        date: true,
+        datePattern: ["m", "y"],
+      });
+
+      new Cleave("#security-code-input", {
+        numericOnly: true,
+        blocks: [3],
+      });
+
+      function showFilledCart(attInfo, userInfo) {
+        // console.log(attInfo);
+        // console.log(userInfo);
+        let attName = attInfo["attraction"]["name"];
+        let attAddress = attInfo["attraction"]["address"];
+        let attImage = attInfo["attraction"]["image"];
+        let bookDate = attInfo["date"];
+        let bookTime = attInfo["time"];
+        let bookPrice = attInfo["price"];
+
+        // 景點名稱
+        document.querySelector(
+          ".attname"
+        ).textContent = `台北一日遊：${attName}`;
+
+        // 預約日期
+        document.querySelector(".booking-date").textContent = bookDate;
+
+        // 預約時間
+        if (bookTime === "morning") {
+          document.querySelector(".booking-time").textContent =
+            "早上9點到下午4點";
+        } else if (bookTime === "afternoon") {
+          document.querySelector(".booking-time").textContent =
+            "下午2點到晚上9點";
+        }
+
+        // 預約費用
+        document.querySelector(
+          ".booking-price"
+        ).textContent = `新台幣 ${bookPrice} 元`;
+
+        // 景點地址
+        document.querySelector(".booking-address").textContent = attAddress;
+
+        // 景點圖片
+        let pictureDiv = document.querySelector(".picture");
+        let imageUrl = attImage;
+        let img = document.createElement("img");
+        img.src = imageUrl;
+        img.alt = "景點圖片";
+        img.classList.add("picture-img");
+        pictureDiv.appendChild(img);
+
+        // 總價
+        document.querySelector(
+          ".total-price-actual"
+        ).textContent = `新台幣 ${bookPrice} 元`;
+
+        // 會員姓名、會員信箱
+        let userName = userInfo["data"]["name"];
+        let userEmail = userInfo["data"]["email"];
+        document.querySelector(
+          ".headline"
+        ).textContent = `您好，${userName}，待預定的行程如下：`;
+        document.querySelector(".name-input").value = userName;
+        document.querySelector(".email-input").value = userEmail;
+
+        // 選擇顯示頁面
+        document.querySelector(".section-empty-cart").style.display = "none";
+        document.querySelector(".section-filled-cart").style.display = "block";
+        // 顯示滾輪
+        document.body.style.overflowY = "auto";
+      }
+
+      function showEmptyCart(userInfo) {
+        let userName = userInfo["data"]["name"];
+        document.querySelector(
+          ".empty-headline"
+        ).textContent = `您好，${userName}，待預定的行程如下：`;
+        document.querySelector(".section-empty-cart").style.display = "block";
+        document.querySelector(".section-filled-cart").style.display = "none";
+        document.body.style.overflowY = "hidden"; // 不顯示滾輪
+      }
+
+      // click「登出系統」button
+      let item2 = document.querySelector(".item2");
+      item2.addEventListener("click", () => {
+        localStorage.removeItem("jwt_token");
+        location.reload();
+      });
+
+      // click website title for returning to the homepage
+      let webTitle = document.querySelector(".webtitle");
+      webTitle.addEventListener("click", () => {
+        // fetch 「/」
+        let url = "/";
+        fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        }).then((response) => {
+          // console.log(response.url);
+          window.location.href = response.url;
+        });
+      });
+    </script>
+  </body>
 </html>

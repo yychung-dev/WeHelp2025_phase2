@@ -316,5 +316,127 @@ async def checkSignin(request:Request):
         return response
 
 
+# 取得尚未確認下單的預定行程 api
+@app.get("/api/booking")
+async def checkIfBooking(request:Request): 
+    authorization= get_current_user(request)
+    if (authorization is None):
+        return JSONResponse(
+            status_code=403,
+            content={"error": True,
+              "message": "未登入系統，拒絕存取"}
+            ) 
+    with cnxpool.get_connection() as cnx: 
+        with cnx.cursor() as cursor:
+            try:
+                cursor.execute("SELECT booking.member_id, booking.attraction_id,attraction.name, attraction.address, att_url_new.url, booking.date, booking.time, booking.price FROM booking JOIN attraction ON booking.attraction_id = attraction.id JOIN (SELECT att_url.attraction_id, att_url.url, ROW_NUMBER() OVER (PARTITION BY att_url.attraction_id ORDER BY att_url.id) AS rn FROM att_url) AS att_url_new ON booking.attraction_id = att_url_new.attraction_id WHERE booking.member_id = %s AND att_url_new.rn = 1",[authorization['id']])
+                data=cursor.fetchall()
+                # No need to SELECT booking.member_id ? 
+                if data==[]:
+                    return None
+                else:
+                    member_id=data[0][0]
+                    attraction_id=data[0][1]
+                    name=data[0][2]
+                    address=data[0][3]
+                    image=data[0][4]
+                    date=data[0][5]
+                    time=data[0][6]
+                    price=data[0][7]
+
+                    return {                    
+                        "data":{
+                            "attraction":{
+                                "id":attraction_id,
+                                "name":name,
+                                "address":address,
+                                "image":image
+                        
+                            },                   
+                        "date":date,
+                        "time":time,
+                        "price":price
+                        }
+                    }
+
+                
+            except Exception:
+                return JSONResponse(
+                    status_code=500,
+                    content={"error": True, "message": "伺服器內部錯誤"}
+                )
+
+
+
+# 建立新的預定行程 api
+class newBooking(BaseModel):    
+    attractionId: int
+    date:str
+    time:str
+    price:int
+
+@app.post("/api/booking")
+async def startbooking(newBooking:newBooking,request:Request):
+    authorization= get_current_user(request)
+    if (authorization is None):
+        return JSONResponse(
+            status_code=403,
+            content={"error": True,
+              "message": "未登入系統，拒絕存取"}
+            )
+    if not all([newBooking.attractionId, newBooking.date, newBooking.time, newBooking.price]):
+        return JSONResponse(
+            status_code=400,
+            content={"error": True,
+              "message": "建立失敗，輸入不正確或其他原因"}
+            )
+    with cnxpool.get_connection() as cnx: 
+            with cnx.cursor() as cursor:                                  
+                try:
+                    cursor.execute("SELECT COUNT(*) FROM booking WHERE member_id=%s" ,[authorization['id']]) 
+                    data=cursor.fetchall()[0][0]  
+                    if data>0:
+                        cursor.execute("UPDATE booking SET attraction_id=%s, `date`=%s,time=%s,price=%s WHERE member_id=%s", [newBooking.attractionId,newBooking.date,newBooking.time,newBooking.price,authorization['id']])
+                        
+                    else:  # data=0 
+                        cursor.execute("INSERT INTO booking(attraction_id, `date`, time,price, member_id) VALUES(%s, %s, %s, %s, %s) ",[newBooking.attractionId, newBooking.date, newBooking.time, newBooking.price, authorization['id']])
+
+                    cnx.commit()
+                    return {"ok": True}    
+                
+                except Exception:
+                    return JSONResponse(
+                        status_code=500,
+                        content={"error": True, "message": "伺服器內部錯誤"}
+                    )
+
+
+# 刪除目前的預定行程 api
+@app.delete("/api/booking")
+async def deletebooking(request:Request):
+    authorization= get_current_user(request)
+    if (authorization is None):
+        return JSONResponse(
+            status_code=403,
+            content={"error": True,
+              "message": "未登入系統，拒絕存取"}
+            )
+    with cnxpool.get_connection() as cnx: 
+            with cnx.cursor() as cursor:                                  
+                try:                
+                    cursor.execute("DELETE FROM booking WHERE member_id = %s",[authorization['id'],])
+                    cnx.commit()
+                    return {"ok": True}  
+
+                except Exception as e:
+                    logging.error(f"Error occurred while deleting booking: {str(e)}")
+                    return JSONResponse(
+                        status_code=500,
+                        content={"error": True, "message": "伺服器內部錯誤"}
+                    )
+                 
+
+
+
 app.mount("/",StaticFiles(directory="static",html=True))
 app.mount("/static", StaticFiles(directory="static"), name="static")
