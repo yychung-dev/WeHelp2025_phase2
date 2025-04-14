@@ -131,12 +131,22 @@
               <div class="time-text">選擇時間：</div>
               <div class="radio-group">
                 <label>
-                  <input type="radio" name="color" id="circle1" />
+                  <input
+                    type="radio"
+                    name="color"
+                    id="circle1"
+                    value="morning"
+                  />
                   <span class="circle"></span>
                 </label>
                 <div class="text-am">上半天</div>
                 <label>
-                  <input type="radio" name="color" id="circle2" />
+                  <input
+                    type="radio"
+                    name="color"
+                    id="circle2"
+                    value="afternoon"
+                  />
                   <span class="circle"></span>
                 </label>
                 <div class="text-pm">下半天</div>
@@ -249,6 +259,7 @@
         font-weight: 500;
         letter-spacing: 0%;
         color: #666666;
+        cursor: pointer;
       }
 
       .item2 {
@@ -707,6 +718,7 @@
       .date-input {
         width: 193px;
         height: 35px;
+        padding: 5px 10px 5px 10px;
         border: none;
       }
 
@@ -1410,6 +1422,132 @@
               item2.textContent = "登出系統";
             } else {
               item2.textContent = "登入/註冊";
+            }
+          })
+          .catch((error) => {
+            console.error("發生錯誤：", error);
+          });
+      }
+
+      // click 「預定行程」 button
+      let item1 = document.querySelector(".item1");
+      item1.addEventListener("click", () => {
+        const token = localStorage.getItem("jwt_token");
+        // console.log(token);
+        fetch("/api/user/auth", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data === null) {
+              showSigninModal();
+            } else {
+              let url = "/booking";
+              fetch(url, {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                  Accept: "application/json",
+                },
+              }).then((response) => {
+                // console.log(response.url);
+                window.location.href = response.url;
+              });
+            }
+          });
+      });
+
+      // 取得使用者選擇的時間 (morning or afternoon)
+      let selectedTime = "morning";
+      document.querySelectorAll('input[name="color"]').forEach((radioBtn) => {
+        radioBtn.addEventListener("input", () => {
+          selectedTime = radioBtn.value;
+        });
+      });
+
+      // click 「開始預約行程」 button
+      let bookBtn = document.querySelector(".btn-text");
+      bookBtn.addEventListener("click", () => {
+        const token = localStorage.getItem("jwt_token");
+        // console.log(token);
+        fetch("/api/user/auth", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data === null) {
+              showSigninModal();
+            } else {
+              checkBookInputEmpty();
+            }
+          });
+      });
+
+      // check if booking input is empty
+      async function checkBookInputEmpty() {
+        let chkBookDate = document.getElementById("date-input").value;
+        if (chkBookDate === "") {
+          alert("請選擇預約日期");
+        } else {
+          fetchStartBookingAPI();
+        }
+      }
+
+      // fetch 建立新的預定行程 api
+      async function fetchStartBookingAPI() {
+        // 取得景點id
+        const match = window.location.pathname.match(/\/attraction\/(\d+)/);
+        let attractionId = match ? parseInt(match[1], 10) : null;
+        let bookAttId = attractionId;
+
+        // 取得使用者選擇的日期
+        let selectedDate = document.getElementById("date-input").value;
+        let bookDate = selectedDate;
+
+        // 取得使用者本次行程應付的費用(2000或2500)
+        let priceText = document.querySelector(".actual-price").textContent;
+        // console.log(priceText);
+        let extractedPrice = parseInt(priceText.replace(/\D/g, ""), 10);
+        let bookPrice = extractedPrice;
+
+        const token = localStorage.getItem("jwt_token");
+
+        fetch("/api/booking", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            attractionId: bookAttId,
+            date: bookDate,
+            time: selectedTime,
+            price: bookPrice,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.ok) {
+              let url = "/booking";
+              fetch(url, {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                  Accept: "application/json",
+                },
+              }).then((response) => {
+                // console.log(response.url);
+                window.location.href = response.url;
+              });
             }
           })
           .catch((error) => {

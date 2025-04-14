@@ -203,6 +203,7 @@
         font-weight: 500;
         letter-spacing: 0%;
         color: #666666;
+        cursor:pointer;
       }
 
       .item2 {
@@ -1646,6 +1647,37 @@
             console.error("發生錯誤：", error);
         });
       }
+
+      // click 「預定行程」 button
+      let item1=document.querySelector(".item1");
+      item1.addEventListener('click',() => {
+        const token=localStorage.getItem("jwt_token");
+        // console.log(token);
+        fetch("/api/user/auth",{
+          method:"GET",
+          headers:{
+            "Content-Type": "application/json",  
+            "Authorization": `Bearer ${token}`,  
+          }
+        }).then(response => response.json())
+        .then(data => {
+          if (data===null) {
+            showSigninModal();
+          } else {
+            let url = "/booking";
+            fetch(url, {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+              },
+            }).then((response) => {
+              // console.log(response.url);
+              window.location.href = response.url;
+            });
+          }
+        })
+      })
       
     </script>
   </body>
