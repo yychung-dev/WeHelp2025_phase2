@@ -11,6 +11,9 @@ import base64
 import jwt
 import datetime
 
+import httpx
+import uuid  
+
 app=FastAPI()
 
 SECRET_KEY="secret" 
@@ -435,6 +438,274 @@ async def deletebooking(request:Request):
                         content={"error": True, "message": "伺服器內部錯誤"}
                     )
                  
+
+# 建立新訂單並完成付款程序 api
+
+class Attraction(BaseModel):
+    id: int
+    name: str
+    address: str
+    image: str
+
+class Trip(BaseModel):
+    attraction: Attraction
+    date: str
+    time: str
+
+class Contact(BaseModel):
+    name: str
+    email: str
+    phone: str
+
+class Order(BaseModel):
+    price: int
+    trip: Trip
+    contact: Contact
+
+class OrderRequest(BaseModel):
+    prime: str
+    order: Order
+
+
+
+@app.post("/api/orders")
+async def startordering(request:Request, order_request: OrderRequest = Body(...)):
+    authorization= get_current_user(request)
+    if (authorization is None):
+        return JSONResponse(
+            status_code=403,
+            content={"error": True,
+              "message": "未登入系統，拒絕存取"}
+            )
+    # print("user ID:", authorization['id'])
+
+    if not all([order_request.prime,order_request.order.contact.name, order_request.order.contact.email, order_request.order.contact.phone]):
+        return JSONResponse(
+            status_code=400,
+            content={"error": True,
+              "message": "訂單建立失敗，輸入不正確或其他原因"}
+            )
+
+    # generate random order number
+    order_number = datetime.datetime.now().strftime("%Y%m%d%H%M%S") + str(uuid.uuid4().hex[:6])
+
+
+    contact = order_request.order.contact
+    trip = order_request.order.trip
+    price = order_request.order.price
+    prime = order_request.prime
+    
+
+    # create an order record in ordering table and mark it as UNPAID
+    with cnxpool.get_connection() as cnx: 
+            with cnx.cursor() as cursor:                                  
+                try:
+                    insert_query = """
+                        INSERT INTO ordering (
+                            contactname, contactemail, contactphone, prime, message, price, date, time, attraction_id, order_number, paidornot
+                        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    """
+                    cursor.execute(insert_query, (
+                        contact.name,
+                        contact.email,
+                        contact.phone,
+                        prime,
+                        "等待付款",
+                        price,
+                        trip.date,
+                        trip.time,
+                        trip.attraction.id,                       
+                        order_number,
+                        "UNPAID"
+                    ))
+                    cnx.commit()
+   
+                
+                except Exception:
+                    return JSONResponse(
+                        status_code=500,
+                        content={"error": True, "message": "伺服器內部錯誤"}
+                    )
+                
+                # Call TapPay Pay By Prime API to make a credit card payment 
+                try:
+                    async with httpx.AsyncClient(timeout=32.0) as client:
+                        tappay_response = await client.post(
+                            url="https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime",
+                            headers={
+                                "content-type": "application/json",
+                                "x-api-key": "partner_rSkvdBw230Q6sEOXRRtw9axczeJ3Qc1cCUZVNsJhdm975r4Kyo5wCi06"
+                            },
+                            json={
+                                "prime": prime,
+                                "partner_key": "partner_rSkvdBw230Q6sEOXRRtw9axczeJ3Qc1cCUZVNsJhdm975r4Kyo5wCi06",
+                                "merchant_id": "tppf_elsachung_GP_POS_1", 
+                                "amount": price,
+                                "details": "台北一日遊行程付款",
+                                "cardholder": {
+                                    "phone_number": contact.phone,
+                                    "name": contact.name,
+                                    "email": contact.email
+                                }
+                            }
+                        )
+                        tappay_response.raise_for_status()
+                    result = tappay_response.json()
+
+                except (httpx.HTTPStatusError, httpx.RequestError) as e:
+                    message = "TapPay 請求失敗"                   
+                    with cnxpool.get_connection() as cnx:
+                        with cnx.cursor() as cursor:
+                            update_query = """
+                                UPDATE ordering SET status=%s, message=%s
+                                WHERE order_number=%s
+                            """
+                            cursor.execute(update_query, (-1, message, order_number))
+                            cnx.commit()
+                    # import traceback
+                    # traceback.print_exc()  
+
+                    return {
+                        "data": {
+                            "number": order_number,
+                            "payment": {
+                                "status": -1,
+                                "message": message
+                            }
+                        }
+                    }
+
+
+
+                # Update specific columns in ordering table, mark the order record as PAID.
+                # Send the order number back to the front-end.
+
+                # After the user successfully completes the order and payment, the corresponding entry in the booking table will be removed. This ensures the booking page will no longer show outdated reservation data, preventing accidental duplicate bookings.
+
+                payment_status = result.get("status")
+                message = "付款成功" if payment_status == 0 else "付款失敗"
+                try:
+                    with cnxpool.get_connection() as cnx:
+                        with cnx.cursor() as cursor:
+                            if payment_status==0:
+                                update_query = """
+                                    UPDATE ordering SET status=%s, message=%s, paidornot=%s
+                                    WHERE order_number=%s
+                                """
+                                cursor.execute(update_query, (payment_status, "付款成功", "PAID", order_number))
+
+                                # remove the corresponding entry in the booking table
+                                cursor.execute("DELETE FROM booking WHERE member_id=%s AND attraction_id=%s AND date=%s AND time=%s", [authorization['id'],trip.attraction.id,trip.date,trip.time])
+                                
+                                cnx.commit()
+
+                                return {
+                                    "data": {
+                                        "number": order_number,
+                                        "payment": {
+                                            "status": payment_status,
+                                            "message": message
+                                        }
+                                    }
+                                }
+                                
+                            else:  
+                                update_query = """
+                                    UPDATE ordering SET status=%s, message=%s
+                                    WHERE order_number=%s
+                                """
+                                cursor.execute(update_query, (payment_status, "付款失敗", order_number))
+
+                                cnx.commit()
+
+                                return {
+                                    "data": {
+                                        "number": order_number,
+                                        "payment": {
+                                            "status": payment_status,  
+                                            "message": message
+                                        }
+                                    }
+                                }
+                            
+                except Exception:                    
+                    return JSONResponse(
+                        status_code=500,
+                        content={"error": True, "message": "伺服器內部錯誤"}
+                    )
+                     
+                
+
+
+
+# 根據訂單編號取得訂單資訊 api
+@app.get("/api/order/{orderNumber}")
+def getOrderInfo(orderNumber:str,request:Request):
+    authorization= get_current_user(request)
+    if (authorization is None):
+        return JSONResponse(
+            status_code=403,
+            content={"error": True,
+              "message": "未登入系統，拒絕存取"}
+            ) 
+    with cnxpool.get_connection() as cnx: 
+            with cnx.cursor() as cursor:                                  
+                try:
+                    # JOIN ordering table and attaction table, att_url table and select specific data
+                    cursor.execute("SELECT ordering.order_number,  ordering.price, ordering.attraction_id, attraction.name, attraction.address, att_url_new.url, ordering.date, ordering.time, ordering.contactname, ordering.contactemail, ordering.contactphone, ordering.status FROM ordering JOIN attraction ON ordering.attraction_id = attraction.id JOIN (SELECT att_url.attraction_id, att_url.url, ROW_NUMBER() OVER (PARTITION BY att_url.attraction_id ORDER BY att_url.id) AS rn FROM att_url) AS att_url_new ON ordering.attraction_id = att_url_new.attraction_id WHERE ordering.order_number = %s AND att_url_new.rn = 1;", [orderNumber])
+
+                    data=cursor.fetchall()
+
+                    if data==[]:
+                        return {"data": None}
+
+                    else:
+                        order_number=data[0][0]
+                        price=data[0][1]
+                        attraction_id=data[0][2]
+                        attname=data[0][3]
+                        address=data[0][4]
+                        att_url=data[0][5]
+                        date=data[0][6]
+                        time=data[0][7]
+                        contactname=data[0][8]
+                        contactemail=data[0][9]
+                        contactphone=data[0][10]
+                        status=data[0][11]
+                        
+                        
+                        return {                    
+                            "data": {
+                                "number":order_number,
+                                "price": price,
+                                "trip": {
+                                    "attraction": {
+                                        "id": attraction_id,
+                                        "name": attname,
+                                        "address": address,
+                                        "image": att_url
+                                    },
+                                    "date": date,
+                                    "time": time
+                                },
+                                "contact": {
+                                    "name": contactname,
+                                    "email": contactemail,
+                                    "phone": contactphone
+                                },
+                                "status": status
+                            }
+                        }
+                        
+
+                
+                except Exception:
+                    return JSONResponse(
+                        status_code=500,
+                        content={"error": True, "message": "伺服器內部錯誤"}
+                    )    
+                        
+
 
 
 

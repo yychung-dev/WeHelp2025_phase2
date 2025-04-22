@@ -8,7 +8,7 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap"
       rel="stylesheet"
     />
-    <script src="https://cdn.jsdelivr.net/npm/cleave.js"></script>
+    <script src="https://js.tappaysdk.com/sdk/tpdirect/v5.14.0"></script>
   </head>
   <body>
     <header>
@@ -95,37 +95,20 @@
       <hr class="separator" />
       <div class="payment">
         <div class="payment-title">信用卡付款資訊</div>
-        <div class="card-number">
+        <div class="c-number">
           <div class="card-number-text">卡片號碼：</div>
-          <input
-            type="text"
-            class="card-number-input"
-            id="card-number-input"
-            placeholder="**** **** **** ****"
-            maxlength="19"
-          />
+          <div class="tpfield" id="card-number"></div>
+          <div class="field-message" id="number-message"></div>
         </div>
-        <div class="card-expdate">
+        <div class="c-expdate">
           <div class="expdate-text">過期時間：</div>
-          <input
-            type="text"
-            class="expdate-input"
-            id="expdate-input"
-            placeholder="MM/YY"
-            maxlength="5"
-            required
-          />
+          <div class="tpfield" id="card-expiration-date"></div>
+          <div class="field-message" id="expiry-message"></div>
         </div>
-        <div class="card-security-code">
+        <div class="c-security-code">
           <div class="security-code-text">驗證密碼：</div>
-          <input
-            type="password"
-            class="security-code-input"
-            id="security-code-input"
-            placeholder="CVV"
-            maxlength="3"
-            required
-          />
+          <div class="tpfield" id="card-ccv"></div>
+          <div class="field-message" id="ccv-message"></div>
         </div>
       </div>
       <hr class="separator" />
@@ -134,11 +117,16 @@
           <div class="total-price-text">總價：</div>
           <div class="total-price-actual"></div>
         </div>
-        <div class="btn-wrapper">
-          <button type="submit" class="btn-ordering">
-            <div class="btn-ordering-text">確認訂購並付款</div>
+        <form class="payment-form">
+          <button
+            type="submit"
+            id="submit-button"
+            class="btn-ordering"
+            disabled
+          >
+            <span class="btn-ordering-text">確認訂購並付款</span>
           </button>
-        </div>
+        </form>
       </div>
       <footer class="filled-page-footer">
         <p class="filled-footer-text">COPYRIGHT © 2021 台北一日遊</p>
@@ -470,7 +458,25 @@
         margin-bottom: 20px;
       }
 
-      .card-number {
+      .field-message {
+        font-size: 12px;
+        margin-top: 5px;
+        color: #dc3545;
+        display: none;
+      }
+
+      .tpfield {
+        height: 38px;
+      }
+
+      .field-message {
+        font-size: 12px;
+        margin-top: 10px;
+        margin-left: 5px;
+        color: rgb(195, 16, 16);
+      }
+
+      .c-number {
         display: flex;
         margin-bottom: 15px;
       }
@@ -490,14 +496,14 @@
         align-items: center;
       }
 
-      .card-number-input {
+      #card-number {
         width: 200px;
         border-radius: 5px;
         border: 1px solid #e8e8e8;
         padding: 10px;
       }
 
-      .card-expdate {
+      .c-expdate {
         display: flex;
         margin-bottom: 15px;
       }
@@ -517,14 +523,14 @@
         align-items: center;
       }
 
-      .expdate-input {
+      #card-expiration-date {
         width: 200px;
         border-radius: 5px;
         border: 1px solid #e8e8e8;
         padding: 10px;
       }
 
-      .card-security-code {
+      .c-security-code {
         display: flex;
       }
 
@@ -543,7 +549,7 @@
         align-items: center;
       }
 
-      .security-code-input {
+      #card-ccv {
         width: 200px;
         border-radius: 5px;
         border: 1px solid #e8e8e8;
@@ -573,7 +579,7 @@
         vertical-align: middle;
       }
 
-      .btn-wrapper {
+      .payment-form {
         display: flex;
         justify-content: flex-end;
       }
@@ -604,6 +610,11 @@
         vertical-align: middle;
         text-align: center;
         white-space: nowrap;
+      }
+
+      .disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
       }
 
       /* 有商品購物車_頁尾 */
@@ -979,32 +990,22 @@
           });
       });
 
-      // Cleave.js for credit-card auto-formatting
-      new Cleave("#card-number-input", {
-        numericOnly: true,
-        blocks: [4, 4, 4, 4],
-        delimiter: " ",
-      });
-
-      new Cleave("#expdate-input", {
-        date: true,
-        datePattern: ["m", "y"],
-      });
-
-      new Cleave("#security-code-input", {
-        numericOnly: true,
-        blocks: [3],
-      });
-
+      let attId;
+      let attName;
+      let attImage;
+      let bookTime;
+      let bookPrice;
       function showFilledCart(attInfo, userInfo) {
         // console.log(attInfo);
         // console.log(userInfo);
-        let attName = attInfo["attraction"]["name"];
+        attName = attInfo["attraction"]["name"];
         let attAddress = attInfo["attraction"]["address"];
-        let attImage = attInfo["attraction"]["image"];
+        attImage = attInfo["attraction"]["image"];
         let bookDate = attInfo["date"];
-        let bookTime = attInfo["time"];
-        let bookPrice = attInfo["price"];
+        bookTime = attInfo["time"];
+        bookPrice = attInfo["price"];
+
+        attId = attInfo["attraction"]["id"];
 
         // 景點名稱
         document.querySelector(
@@ -1094,6 +1095,201 @@
           window.location.href = response.url;
         });
       });
+
+      // TPDirect.setupSDK
+      TPDirect.setupSDK(
+        159952,
+        "app_5iVKPy5nuHAEKLp1kBaGyzR3mtpHAfUjnoJAslofmdov90OltX0v0oLSwTKU",
+        "sandbox"
+      );
+
+      let fields = {
+        number: {
+          element: "#card-number",
+          placeholder: "**** **** **** ****",
+        },
+        expirationDate: {
+          element: document.getElementById("card-expiration-date"),
+          placeholder: "MM / YY",
+        },
+        ccv: {
+          element: "#card-ccv",
+          placeholder: "CCV",
+        },
+      };
+
+      TPDirect.card.setup({
+        // Display ccv field
+        fields: fields,
+        styles: {
+          // Style all elements
+          input: {
+            color: "orange",
+          },
+          ".valid": {
+            color: "green",
+          },
+          ".invalid": {
+            color: "red",
+          },
+        },
+        // 卡號輸入正確後，顯示前六後四碼信用卡卡號
+        isMaskCreditCardNumber: true,
+        maskCreditCardNumberRange: {
+          beginIndex: 6,
+          endIndex: 11,
+        },
+      });
+
+      TPDirect.card.onUpdate(function (update) {
+        // 當update.canGetPrime === true, you can call TPDirect.card.getPrime()
+        let submitButton = document.getElementById("submit-button");
+        if (update.canGetPrime) {
+          submitButton.removeAttribute("disabled");
+          submitButton.classList.remove("disabled");
+        } else {
+          submitButton.setAttribute("disabled", true);
+          submitButton.classList.add("disabled");
+        }
+
+        // check if the input is correct and show the error message
+        if (update.status.number === 2) {
+          document.getElementById("number-message").textContent = "格式錯誤";
+          document.getElementById("number-message").style.display = "block";
+        } else if (update.status.number === 0) {
+          document.getElementById("number-message").textContent = "格式正確";
+          document.getElementById("number-message").style.display = "none";
+        } else {
+          document.getElementById("number-message").textContent = "";
+          document.getElementById("number-message").style.display = "none";
+        }
+
+        if (update.status.expiry === 2) {
+          document.getElementById("expiry-message").textContent = "格式錯誤";
+          document.getElementById("expiry-message").style.display = "block";
+        } else if (update.status.expiry === 0) {
+          document.getElementById("expiry-message").textContent = "格式正確";
+          document.getElementById("expiry-message").style.display = "none";
+        } else {
+          document.getElementById("expiry-message").textContent = "";
+          document.getElementById("expiry-message").style.display = "none";
+        }
+
+        if (update.status.ccv === 2) {
+          document.getElementById("ccv-message").textContent = "格式錯誤";
+          document.getElementById("ccv-message").style.display = "block";
+        } else if (update.status.ccv === 0) {
+          document.getElementById("ccv-message").textContent = "格式正確";
+          document.getElementById("ccv-message").style.display = "none";
+        } else {
+          document.getElementById("ccv-message").textContent = "";
+          document.getElementById("ccv-message").style.display = "none";
+        }
+      });
+
+      // 取得Prime: call TPDirect.card.getPrime when user submit form to get tappay prime
+      document
+        .querySelector(".payment-form")
+        .addEventListener("submit", onSubmit);
+
+      function onSubmit(event) {
+        event.preventDefault();
+        // 取得 TapPay Fields 的 status
+        const tappayStatus = TPDirect.card.getTappayFieldsStatus();
+        // console.log(tappayStatus.canGetPrime);
+
+        // 確認是否可以getPrime：信用卡欄位填寫不完整或錯誤，不能送出 Prime
+        if (!tappayStatus.canGetPrime) {
+          alert("請確認信用卡資訊填寫正確");
+          console.log("無法取得交易碼 (Prime)");
+          return;
+        }
+
+        // 檢查聯絡資訊欄位是否為空
+        let contactnameInput = document
+          .querySelector(".name-input")
+          .value.trim();
+        let contactemailInput = document
+          .querySelector(".email-input")
+          .value.trim();
+        let contactmobileInput = document
+          .querySelector(".mobile-input")
+          .value.trim();
+
+        if (!contactnameInput || !contactemailInput || !contactmobileInput) {
+          alert("請確認所有聯絡資訊皆已填寫");
+          return; // 終止送出表單的流程
+        }
+
+        // 聯絡資訊和信用卡欄位都沒問題，才能呼叫 getPrime：Get prime
+        TPDirect.card.getPrime((result) => {
+          // console.log(result.status);
+          if (result.status !== 0) {
+            alert("付款資訊處理失敗，請稍後再試或聯絡客服");
+            console.log("取得交易碼 (Prime) 失敗: " + result.msg);
+            return;
+          }
+          // 取得prime成功
+          const prime = result.card.prime;
+          console.log("取得交易碼 (Prime) 成功，交易碼: " + prime);
+
+          // send prime to your server, to pay with TapPay Pay By Prime API.
+          const orderData = {
+            prime: prime,
+            order: {
+              price: bookPrice,
+              trip: {
+                attraction: {
+                  id: attId,
+                  name: attName,
+                  address:
+                    document.querySelector(".booking-address").textContent,
+                  image: attImage,
+                },
+                date: document.querySelector(".booking-date").textContent,
+                time: bookTime,
+              },
+              contact: {
+                name: document.querySelector(".name-input").value,
+                email: document.querySelector(".email-input").value,
+                phone: document.querySelector(".mobile-input").value,
+              },
+            },
+          };
+          // call startOrdering function to fetch startordering api
+          startOrdering(orderData);
+        });
+      }
+
+      async function startOrdering(orderData) {
+        const token = localStorage.getItem("jwt_token");
+        // console.log(token);
+        fetch("/api/orders", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(orderData),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            // console.log(data);
+            const paymentStatus = data?.data?.payment?.status;
+            const orderNumber = data?.data?.number;
+            if (paymentStatus === 0) {
+              // order and payment process completed, redirect user to the thankyou page
+              window.location.href = `/thankyou?number=${orderNumber}`;
+            } else {
+              // payment fails, stay in booking page and give an alert
+              alert("訂單處理失敗: " + data.data.payment.message);
+            }
+          })
+          .catch((error) => {
+            alert("系統錯誤，請稍後再試");
+            console.log("訂單處理發生錯誤: " + error);
+          });
+      }
     </script>
   </body>
 </html>
