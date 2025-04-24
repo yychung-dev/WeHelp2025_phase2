@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 import os
+import sys
 
 load_dotenv()  # 載入.env file
 
@@ -20,6 +21,31 @@ import httpx
 import uuid  
 
 app=FastAPI()
+
+
+required_vars = [
+    "SECRET_KEY",
+    "ALGORITHM",
+    "DB_USER",
+    "DB_PASSWORD",
+    "DB_HOST",
+    "DB_NAME",
+    "TAPPAY_API_KEY",
+    "TAPPAY_PARTNER_KEY",
+    "TAPPAY_MERCHANT_ID"
+]
+
+# Check for missing environment variables
+missing = [var for var in required_vars if os.getenv(var) is None]
+
+if missing:
+    print("Missing required environment variables:")
+    for var in missing:
+        print(f" - {var}")
+    print("Please make sure your .env file is configured correctly.")
+    sys.exit(1)
+
+
 
 SECRET_KEY=os.getenv("SECRET_KEY") 
 ALGORITHM = os.getenv("ALGORITHM")
@@ -252,7 +278,7 @@ def create_jwt_token(user_id,name,email):
         "name":name,
         "email":email,        
     }
-    token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
+    token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
     return token
 
 class acctInfo(BaseModel):    
