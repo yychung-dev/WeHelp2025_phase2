@@ -278,7 +278,7 @@ def create_jwt_token(user_id,name,email):
         "name":name,
         "email":email,        
     }
-    token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
+    token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
     return token
 
 class acctInfo(BaseModel):    
