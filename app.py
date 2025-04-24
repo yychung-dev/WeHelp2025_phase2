@@ -1,3 +1,8 @@
+from dotenv import load_dotenv
+import os
+
+load_dotenv()  # 載入.env file
+
 from fastapi import *
 from fastapi.responses import FileResponse,JSONResponse
 from typing import Optional
@@ -16,16 +21,16 @@ import uuid
 
 app=FastAPI()
 
-SECRET_KEY="secret" 
-ALGORITHM = "HS256"
+SECRET_KEY=os.getenv("SECRET_KEY") 
+ALGORITHM = os.getenv("ALGORITHM")
 
 import mysql.connector.pooling
 import mysql.connector
 config={
-    "user":"root",
-    "password":"fumafaith7_",
-    "host":"localhost",
-    "database":"tptrip"
+    "user":os.getenv("DB_USER"),
+    "password":os.getenv("DB_PASSWORD"),
+    "host":os.getenv("DB_HOST"),
+    "database":os.getenv("DB_NAME")
     }
 cnxpool=mysql.connector.pooling.MySQLConnectionPool(pool_name="mypool", pool_size=20, **config)
 
@@ -534,12 +539,12 @@ async def startordering(request:Request, order_request: OrderRequest = Body(...)
                             url="https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime",
                             headers={
                                 "content-type": "application/json",
-                                "x-api-key": "partner_rSkvdBw230Q6sEOXRRtw9axczeJ3Qc1cCUZVNsJhdm975r4Kyo5wCi06"
+                                "x-api-key": os.getenv("TAPPAY_API_KEY")
                             },
                             json={
                                 "prime": prime,
-                                "partner_key": "partner_rSkvdBw230Q6sEOXRRtw9axczeJ3Qc1cCUZVNsJhdm975r4Kyo5wCi06",
-                                "merchant_id": "tppf_elsachung_GP_POS_1", 
+                                "partner_key": os.getenv("TAPPAY_PARTNER_KEY"),
+                                "merchant_id": os.getenv("TAPPAY_MERCHANT_ID"), 
                                 "amount": price,
                                 "details": "台北一日遊行程付款",
                                 "cardholder": {
