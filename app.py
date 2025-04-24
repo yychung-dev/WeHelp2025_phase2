@@ -23,27 +23,27 @@ import uuid
 app=FastAPI()
 
 
-required_vars = [
-    "SECRET_KEY",
-    "ALGORITHM",
-    "DB_USER",
-    "DB_PASSWORD",
-    "DB_HOST",
-    "DB_NAME",
-    "TAPPAY_API_KEY",
-    "TAPPAY_PARTNER_KEY",
-    "TAPPAY_MERCHANT_ID"
-]
+# required_vars = [
+#     "SECRET_KEY",
+#     "ALGORITHM",
+#     "DB_USER",
+#     "DB_PASSWORD",
+#     "DB_HOST",
+#     "DB_NAME",
+#     "TAPPAY_API_KEY",
+#     "TAPPAY_PARTNER_KEY",
+#     "TAPPAY_MERCHANT_ID"
+# ]
 
-# Check for missing environment variables
-missing = [var for var in required_vars if os.getenv(var) is None]
+# # Check for missing environment variables
+# missing = [var for var in required_vars if os.getenv(var) is None]
 
-if missing:
-    print("Missing required environment variables:")
-    for var in missing:
-        print(f" - {var}")
-    print("Please make sure your .env file is configured correctly.")
-    sys.exit(1)
+# if missing:
+#     print("Missing required environment variables:")
+#     for var in missing:
+#         print(f" - {var}")
+#     print("Please make sure your .env file is configured correctly.")
+#     sys.exit(1)
 
 
 
