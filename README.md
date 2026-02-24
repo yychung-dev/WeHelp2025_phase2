@@ -1,10 +1,16 @@
 #  Taipei Day Trip (Tourism E-commerce Website)
 
----
+
+####  Website URL
+
+[https://tpdaytrip.yychung.site](https://tpdaytrip.yychung.site)
 
 
-**Website URL:** [https://tpdaytrip.yychung.site](https://tpdaytrip.yychung.site)
-
+#### Test Account
+| Field    | Value                       |
+| -------- | --------------------------- |
+| Email    | elsachung999@gmail.com      |
+| Password | test123                     |
 ---
 
 
@@ -24,26 +30,19 @@
 
 
 
+---
+
+## Tech Stack
+
+| Category            | Technologies                                           |
+| ------------------- | ------------------------------------------------------ |
+| **Backend**         | Python, FastAPI (RESTful API), Data Processing (JSON)  |
+| **Database**        | MySQL                                                  |
+| **Cloud Services**  | AWS EC2                                                |
+| **Version Control** | Git, GitHub                                            |
+| **Infrastructure**  | Nginx (Reverse Proxy, HTTPS)                           |
+| **Payment**         | TapPay API                                             |
+| **Frontend**        | HTML, CSS, JavaScript, RWD                             |
 
 ---
 
-##  Tech Stack
-
-###  Backend
-- Python (FastAPI)
-- Data Processing (JSON)
-
-###  Database
-- MySQL
-
-###  Cloud Services
-- AWS EC2  
-
-###  Development Tools
-- Git & GitHub   
-
-###  Frontend
-- HTML  
-- CSS  
-- JavaScript
-- RWD
