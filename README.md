@@ -1,7 +1,11 @@
 #  Taipei Day Trip (Tourism E-commerce Website)
 
+---
+
 
 **Website URL:** [https://tpdaytrip.yychung.site](https://tpdaytrip.yychung.site)
+
+---
 
 
 ##  Technical Highlights
