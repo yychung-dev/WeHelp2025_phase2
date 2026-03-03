@@ -16,17 +16,20 @@
 
 ##  Technical Highlights
 
-- **Built RESTful APIs with FastAPI to support attraction browsing, search, booking, and payment modules; implemented frontend-backend separation.**  
+- **Built RESTful APIs with FastAPI supporting attraction browsing, keyword search, booking, and payment flows with frontend-backend
+separation; deployed on AWS EC2 with Nginx reverse proxy and HTTPS.**
+
+- **Parsed and cleaned government-provided JSON datasets with Python, applying filters and resolving data quality issues such as
+concatenated URL strings and missing values; inserted structured records into MySQL with connection pooling.**
+
+- **Applied database normalization by extracting MRT station names into a separate table with foreign key references, eliminating data
+redundancy and improving maintainability.** 
 
 - **Integrated TapPay API for third-party payment processing.**  
 
 - **Implemented JWT-based authentication system to manage user registration and secure access.**  
 
-- **Parsed and cleaned government-provided JSON datasets with Python, applying filters, normalizing fields, and batch-inserting records into MySQL using connection pooling.**  
-
-- **Applied connection pooling with mysql-connector to improve DB efficiency and reduce latency under concurrent access.**  
-
-- **Deployed the application on AWS EC2 and ensured responsiveness via RWD layout.**  
+- **Ensured responsiveness via RWD layout.**  
 
 
 
